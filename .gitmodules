@@ -1,0 +1,3 @@
+[submodule "Assets/websockets-sharp-unity"]
+	path = Assets/websockets-sharp-unity
+	url = https://github.com/ctrl-labs/websocket-sharp-unity.git
