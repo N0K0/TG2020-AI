@@ -41,7 +41,7 @@ public class Generate_Track : MonoBehaviour
             if(Physics.Raycast(new Vector3(x, 10000, z), Vector3.down, out hit))
             {
                 print(hit.point.y);
-                y = hit.point.y + pst.thickness + 1;
+                y = hit.point.y + pst.thickness;
             }   
 
             //print(string.Format("Point X: {0}, Y: {1} Z: {2}", x, y, z));
