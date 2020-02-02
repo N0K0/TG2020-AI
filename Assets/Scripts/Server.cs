@@ -38,7 +38,7 @@ public class Server : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
         wss = new WebSocketServer("ws://localhost:8888");
         wss.AddWebSocketService<MultiplayerHandler>("/server");
         wss.Start();
