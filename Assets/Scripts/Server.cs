@@ -33,9 +33,12 @@ public class Server : MonoBehaviour
     private MultiplayerHandler socketServer;
     private WebSocketServer wss;
     private WebSocketServiceHost serviceHost;
-        
+       
+    
+
     void Awake()
     {
+        DontDestroyOnLoad(this);
         wss = new WebSocketServer("ws://localhost:8888");
         wss.AddWebSocketService<MultiplayerHandler>("/server");
         wss.Start();
