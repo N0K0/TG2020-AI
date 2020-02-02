@@ -40,7 +40,6 @@ public class Generate_Track : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(new Vector3(x, 10000, z), Vector3.down, out hit))
             {
-                print(hit.point.y);
                 y = hit.point.y + pst.thickness;
             }   
 
@@ -65,6 +64,11 @@ public class Generate_Track : MonoBehaviour
         pc.bezierPath = trackPath;
 
         pst.TriggerUpdate();
+
+        GameObject road = GameObject.Find("Road Mesh Holder");
+        MeshCollider roadCollider = road.GetComponent<MeshCollider>();
+        MeshFilter roadMesh = road.GetComponent<MeshFilter>();
+        roadCollider.sharedMesh = roadMesh.mesh;
     }
 
     private void Awake()

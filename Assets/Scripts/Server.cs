@@ -2,9 +2,9 @@
 using System.Collections;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using System.Collections.Generic;
 
-
-public class SocketServer : WebSocketBehavior
+public class MultiplayerHandler : WebSocketBehavior
 {
     protected override void OnMessage(MessageEventArgs e)
     {
@@ -30,21 +30,21 @@ public class SocketServer : WebSocketBehavior
 
 public class Server : MonoBehaviour
 {
-    private SocketServer socketServer;
+    private MultiplayerHandler socketServer;
     private WebSocketServer wss;
-    
+    private WebSocketServiceHost serviceHost;
+        
     void Awake()
     {
         wss = new WebSocketServer("ws://localhost:8888");
-        wss.AddWebSocketService<SocketServer>("/Server");
+        wss.AddWebSocketService<MultiplayerHandler>("/server");
         wss.Start();
+        serviceHost = wss.WebSocketServices["/server"];
+
     }
 
     void Update()
     {
-        if(wss.IsListening)
-        {
-            Debug.Log("WSS is Running");
-        }
+        print(serviceHost);
     }
 }
