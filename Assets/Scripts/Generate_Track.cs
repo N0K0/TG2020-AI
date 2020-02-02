@@ -9,17 +9,22 @@ using PathCreation;
 public class Generate_Track : MonoBehaviour
 {
     public GameObject trackArea;
+    public GameObject checkpointHolder = null;
 
     public BezierPath trackPath;
-    private Bounds bounds;
     public int Points_min = 3;
     public int Points_max = 10;
-    
+    public int numCheckpoints; // Checkpoints
+
+    private Bounds bounds;
+
+
     private void generatePath()
     {
         bounds = trackArea.GetComponent<MeshRenderer>().bounds;
         List<Vector3> points = new List<Vector3>();
         int num_points = Random.Range(Points_min, Points_max);
+
 
         RoadMeshCreator pst = (RoadMeshCreator)GetComponent<PathSceneTool>();
         PathCreator pc = GetComponent<PathCreator>();
@@ -53,12 +58,14 @@ public class Generate_Track : MonoBehaviour
         trackPath.AutoControlLength = Random.Range(0.1f, 1.0f);
         trackPath.IsClosed = true;
 
+        /*
         for(int i = 0; i < trackPath.NumPoints; i++)
         {
             Vector3 point = trackPath.GetPoint(i);
             float y = Random.Range(0.0f, 10.0f);
             point.y = y;
         }
+        */
         trackPath.NotifyPathModified();
 
         pc.bezierPath = trackPath;
@@ -71,9 +78,47 @@ public class Generate_Track : MonoBehaviour
         roadCollider.sharedMesh = roadMesh.mesh;
     }
 
+    private void generateCheckpoints()
+    {
+        GameObject startpoint = Resources.Load<GameObject>("Startpoint");
+        GameObject checkpoint = Resources.Load<GameObject>("Checkpoint");
+        PathCreator pc = GetComponent<PathCreator>();
+        
+
+        if (checkpointHolder == null){
+            GameObject obj = new GameObject();
+            obj.name = "Checkpoints";
+            checkpointHolder = obj;
+        }
+
+        VertexPath path = pc.path;
+        numCheckpoints = Mathf.Clamp((int)path.length / 10, 4, 10);
+        float spacing = path.length  / numCheckpoints;
+        float dst = 0;
+
+        // Startpoint:
+        Vector3 point_start = path.GetPointAtDistance(dst);
+        Quaternion rot_start = path.GetRotationAtDistance(dst) * Quaternion.Euler(90, 0, 90);
+        Instantiate(startpoint, point_start, rot_start, checkpointHolder.transform);
+        dst += spacing;
+
+        while (dst < path.length)
+        {
+            Vector3 point = path.GetPointAtDistance(dst);
+            Quaternion rot = path.GetRotationAtDistance(dst) * Quaternion.Euler(90, 0,90);
+            Instantiate(checkpoint, point, rot, checkpointHolder.transform);
+            dst += spacing;
+        }
+    }
+
+    private void generateFoilage()
+    {
+
+    }
     private void Awake()
     {
         generatePath();
+        generateCheckpoints();
     }
 
 // Start is called before the first frame update

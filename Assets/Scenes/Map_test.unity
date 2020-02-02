@@ -884,7 +884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eee6dff50f7483b44a4ea8b631baf73e, type: 3}
---- !u!43 &1443966124
+--- !u!43 &1690397788
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1189,7 +1189,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135915182}
-  m_Mesh: {fileID: 1443966124}
+  m_Mesh: {fileID: 1690397788}
 --- !u!4 &2135915185
 Transform:
   m_ObjectHideFlags: 0
@@ -1359,6 +1359,16 @@ PrefabInstance:
       propertyPath: trackArea
       value: 
       objectReference: {fileID: 1171643186}
+    - target: {fileID: 7028325030853909468, guid: c9812305aec373d4f9ac0f039214b72f,
+        type: 3}
+      propertyPath: Points_max
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028325030853909468, guid: c9812305aec373d4f9ac0f039214b72f,
+        type: 3}
+      propertyPath: Points_min
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7028325030853909471, guid: c9812305aec373d4f9ac0f039214b72f,
         type: 3}
       propertyPath: meshHolder
