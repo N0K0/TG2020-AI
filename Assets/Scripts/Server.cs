@@ -33,8 +33,6 @@ public class Server : MonoBehaviour
     private MultiplayerHandler socketServer;
     private WebSocketServer wss;
     private WebSocketServiceHost serviceHost;
-       
-    
 
     void Awake()
     {
@@ -43,7 +41,6 @@ public class Server : MonoBehaviour
         wss.AddWebSocketService<MultiplayerHandler>("/server");
         wss.Start();
         serviceHost = wss.WebSocketServices["/server"];
-
     }
 
     void Update()
