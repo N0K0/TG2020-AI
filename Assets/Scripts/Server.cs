@@ -4,33 +4,9 @@ using WebSocketSharp;
 using WebSocketSharp.Server;
 using System.Collections.Generic;
 
-public class MultiplayerHandler : WebSocketBehavior
-{
-    protected override void OnMessage(MessageEventArgs e)
-    {
-        Debug.Log(e.ToString());
-    }
-
-    protected override void OnOpen()
-    {
-        Debug.Log("New connection open!");
-    }
-
-    protected override void OnClose(CloseEventArgs e)
-    {
-        Debug.Log(e.Reason);
-    }
-
-    protected override void OnError(ErrorEventArgs e)
-    {
-        Debug.LogError(e.Message);
-    }
-
-}
-
 public class Server : MonoBehaviour
 {
-    private MultiplayerHandler socketServer;
+    private ClientController socketServer;
     private WebSocketServer wss;
     private WebSocketServiceHost serviceHost;
 
@@ -38,13 +14,17 @@ public class Server : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         wss = new WebSocketServer("ws://localhost:8888");
-        wss.AddWebSocketService<MultiplayerHandler>("/server");
+        wss.AddWebSocketService<ClientController>("/server");
         wss.Start();
+    }
+
+    public void StartServer()
+    {
         serviceHost = wss.WebSocketServices["/server"];
+        WebSocketSessionManager clients = serviceHost.Sessions;
     }
 
     void Update()
     {
-        print(serviceHost);
     }
 }
