@@ -35,6 +35,11 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Button settings_back = null;
 
 
+
+    //Lobby assets
+    GameObject lobby_area_players = null;
+    GameObject playerListUI = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,10 +59,16 @@ public class MenuController : MonoBehaviour
 
         // Lobby buttons
         lobby_back.onClick.AddListener(() => SwapTo(Windows.Menu));
-        lobby_back.onClick.AddListener(server.StartServer);
+        lobby_start.onClick.AddListener(server.StartServer);
 
         // Settings buttons
         settings_back.onClick.AddListener(() => SwapTo(Windows.Settings));
+
+        //Lobby assets
+        lobby_area_players = canvas_lobby.transform.GetChild(0).gameObject; // What on earth is this hack?
+        playerListUI = Resources.Load<GameObject>("UI/PlayerListItem"); // Used for the lobby menu
+
+        InvokeRepeating("UpdateLobbyPlayers", 0f, 0.2f);
     }
 
     // Update is called once per frame
@@ -69,7 +80,15 @@ public class MenuController : MonoBehaviour
 
     void UpdateLobbyPlayers()
     {
-        GameObject lobby_area_players = canvas_lobby.transform.GetChild(0).gameObject; // What on earth is this hack?
+        Debug.Log("Update player lobby");
+        List<CarController> list = server.GetPlayers();
+
+        print(list.Count);
+
+        foreach(CarController car in list)
+        {
+            print(car);
+        }
     }
 
     void SwapTo(Windows state)
