@@ -19,8 +19,11 @@ public class Server : MonoBehaviour
     private WebSocketServiceHost serviceHost = null;
 
     private List<CarController> players = null;
-    private GameObject car_prefab = null;
 
+    public GameObject PlayerHolder = null;
+
+    private GameObject car_prefab = null;
+    // Used since i can only make game objects in the main thread
     private ConcurrentQueue<ClientController> clientsPending = new ConcurrentQueue<ClientController>();
 
     private void Start()
@@ -28,13 +31,14 @@ public class Server : MonoBehaviour
         car_prefab = Resources.Load<GameObject>("CarController");
     }
 
+    [System.Obsolete] // TODO: Update the AddWebSocketService method to whatever is new and good
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
         players = new List<CarController>();
         wss = new GameSocketServer("ws://localhost:8888");
         // Client controller has a callback to this class in which we instanceiate the gameopbject (must be done in main)
-        wss.AddWebSocketService<ClientController>("/server", () => new ClientController(this) { } ) ; 
+        wss.AddWebSocketService("/server", () => new ClientController(this) { } ) ; 
         wss.Start();
     }
 
@@ -45,7 +49,26 @@ public class Server : MonoBehaviour
 
     public void CreateCarControllerFromClient(ClientController client)
     {
-        GameObject car_gameobject = Instantiate<GameObject>(car_prefab);
+        if(PlayerHolder == null )
+       {
+            print("Playerholder was empty");
+            PlayerHolder = new GameObject("PlayerHolder");
+            Instantiate(PlayerHolder);
+        } else
+        {
+            print("Playerholder search");
+            PlayerHolder = GameObject.Find("PlayerHolder");
+        }
+
+        if(PlayerHolder == null)
+        {
+            print("Playerholder search was empty");
+            PlayerHolder = new GameObject("PlayerHolder");
+            Instantiate(PlayerHolder);
+        }
+
+        GameObject car_gameobject = Instantiate<GameObject>(car_prefab, PlayerHolder.transform);
+
         client.carController = car_gameobject;
         CarController carcontroller_component = car_gameobject.GetComponent<CarController>();
         players.Add(carcontroller_component);
