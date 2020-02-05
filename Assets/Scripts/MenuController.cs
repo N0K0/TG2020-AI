@@ -82,7 +82,6 @@ public class MenuController : MonoBehaviour
     {
         Debug.Log("Update player lobby");
         List<CarController> list = server.GetPlayers();
-
         print(list.Count);
 
         foreach(CarController car in list)

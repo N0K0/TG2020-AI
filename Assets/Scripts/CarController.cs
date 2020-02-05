@@ -7,7 +7,7 @@ using WebSocketSharp.Server;
 public class ClientController : WebSocketBehavior
 {
 
-    public CarController carController = null;
+    public GameObject carController = null;
     private Server server = null;
 
     protected override void OnMessage(MessageEventArgs e)
@@ -29,7 +29,7 @@ public class ClientController : WebSocketBehavior
 
     protected override void OnError(ErrorEventArgs e)
     {
-        Debug.LogError(e.Message);
+        Debug.LogError(e.Exception);
     }
 
     public void parseCommand()
