@@ -44,8 +44,18 @@ public class Server : MonoBehaviour
 
     public void RegisterClient(ClientController client)
     {
+        // Needed since CarController must be made in the main thread
         clientsPending.Enqueue(client);
     }
+    public void UnregisterClient(ClientController client)
+    {
+
+    }
+
+    public void KickPlayer(CarController car) {
+        car.StopPlayer();
+    }
+
 
     public void CreateCarControllerFromClient(ClientController client)
     {
@@ -54,7 +64,9 @@ public class Server : MonoBehaviour
             print("Playerholder was empty");
             PlayerHolder = new GameObject("PlayerHolder");
             Instantiate(PlayerHolder);
-        } else
+
+        }
+        else
         {
             print("Playerholder search");
             PlayerHolder = GameObject.Find("PlayerHolder");
@@ -67,16 +79,31 @@ public class Server : MonoBehaviour
             Instantiate(PlayerHolder);
         }
 
+        DontDestroyOnLoad(PlayerHolder);
+
         GameObject car_gameobject = Instantiate<GameObject>(car_prefab, PlayerHolder.transform);
 
         client.carController = car_gameobject;
         CarController carcontroller_component = car_gameobject.GetComponent<CarController>();
+        carcontroller_component.server = this;
+
+        carcontroller_component.clientController = client;
         players.Add(carcontroller_component);
     }
 
     public List<CarController> GetPlayers()
     {
-        return players;
+        List<CarController> lst = new List<CarController>();
+        
+        foreach ( CarController car in players)
+        {
+            if(car.Active && car.Playable)
+            {
+                lst.Add(car);
+            }
+        }
+
+        return lst;
     }
 
     public void StartServer()

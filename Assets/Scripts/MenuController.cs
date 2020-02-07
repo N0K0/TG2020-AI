@@ -13,6 +13,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject canvas_credits = null;
     [SerializeField] private GameObject canvas_rules = null;
     [SerializeField] private GameObject canvas_lobby = null;
+    [SerializeField] private GameObject canvas_lobby_playerlist = null;
+
     [SerializeField] private GameObject canvas_settings = null;
 
     // Menu buttons
@@ -37,8 +39,8 @@ public class MenuController : MonoBehaviour
 
 
     //Lobby assets
-    GameObject lobby_area_players = null;
-    GameObject playerListUI = null;
+    public GameObject lobby_area_players = null;
+    private GameObject playerListUI_component = null;
 
     // Start is called before the first frame update
     void Start()
@@ -64,9 +66,8 @@ public class MenuController : MonoBehaviour
         // Settings buttons
         settings_back.onClick.AddListener(() => SwapTo(Windows.Settings));
 
-        //Lobby assets
         lobby_area_players = canvas_lobby.transform.GetChild(0).gameObject; // What on earth is this hack?
-        playerListUI = Resources.Load<GameObject>("UI/PlayerListItem"); // Used for the lobby menu
+        playerListUI_component = Resources.Load<GameObject>("UI/PlayerListItem"); // Used for the lobby menu
 
         InvokeRepeating("UpdateLobbyPlayers", 0f, 0.2f);
     }
@@ -80,13 +81,25 @@ public class MenuController : MonoBehaviour
 
     void UpdateLobbyPlayers()
     {
+        // Using playerListUI from Start()
         Debug.Log("Update player lobby");
         List<CarController> list = server.GetPlayers();
-        print(list.Count);
 
-        foreach(CarController car in list)
+        // Nuke all the children before building them again
+        foreach (Transform child in canvas_lobby_playerlist.transform)
         {
-            print(car);
+            Destroy(child.gameObject);
+        }
+
+
+        foreach (CarController car in list)
+        {
+            GameObject gameObject = Instantiate(playerListUI_component, canvas_lobby_playerlist.transform);
+            Button kick_button = gameObject.GetComponentInChildren<Button>();
+            Text player_name = gameObject.transform.Find("PlayerName").gameObject.GetComponent<Text>();
+
+            kick_button.onClick.AddListener(car.KickPlayer);
+            player_name.text = car.UserName;
         }
     }
 
