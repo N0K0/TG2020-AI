@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -15,31 +16,31 @@ public class GameSocketServer : WebSocketServer
 
 public class Server : MonoBehaviour
 {
+
+    enum GameState : int {Main, Game, Done};
+
     private WebSocketServer wss = null;
-    private WebSocketServiceHost serviceHost = null;
-
     private List<CarController> players = null;
-
-    public GameObject PlayerHolder = null;
-
+    private GameObject PlayerHolder = null;
     private GameObject car_prefab = null;
     // Used since i can only make game objects in the main thread
     private ConcurrentQueue<ClientController> clientsPending = new ConcurrentQueue<ClientController>();
+    private float TickRate = 1 / 120; // 120 ticks per sec is the goal
 
-    private void Start()
-    {
-        car_prefab = Resources.Load<GameObject>("CarController");
-    }
+    private GameState gameStatus = GameState.Main;
+
 
     [System.Obsolete] // TODO: Update the AddWebSocketService method to whatever is new and good
-    void Awake()
+    void Start()
     {
+        car_prefab = Resources.Load<GameObject>("CarController");
         DontDestroyOnLoad(gameObject);
         players = new List<CarController>();
         wss = new GameSocketServer("ws://localhost:8888");
         // Client controller has a callback to this class in which we instanceiate the gameopbject (must be done in main)
         wss.AddWebSocketService("/server", () => new ClientController(this) { } ) ; 
         wss.Start();
+        InvokeRepeating("TickUpdate", 0f, TickRate);
     }
 
     public void RegisterClient(ClientController client)
@@ -64,7 +65,6 @@ public class Server : MonoBehaviour
             print("Playerholder was empty");
             PlayerHolder = new GameObject("PlayerHolder");
             Instantiate(PlayerHolder);
-
         }
         else
         {
@@ -108,8 +108,61 @@ public class Server : MonoBehaviour
 
     public void StartServer()
     {
-        serviceHost = wss.WebSocketServices["/server"];
-        WebSocketSessionManager clients = serviceHost.Sessions;
+        // Lets purge all cars which should not be with into the game
+        PurgeInvalidPlayers();
+
+        if (players.Count == 0)
+        {
+            Debug.LogWarning("No players left after purge..");
+            // TODO: UI box on screen?
+            return;
+        }
+
+        // Lets load the next scene
+        SceneManager.LoadScene("GameScene");
+        // In the next scene we will also have the RoundController
+    }
+
+    private static bool NotValidPlayer(CarController car)
+    {
+        return !ValidPlayer(car);
+    }
+
+    private static bool ValidPlayer(CarController car)
+    {
+        return car.Playable && car.Active && !car.UserName.Equals("Anon");
+    }
+
+    public void PurgeInvalidPlayers()
+    {
+        foreach ( CarController car in players)
+        {
+            if (!ValidPlayer(car))
+            {
+                car.KickPlayer();
+            }
+        }
+
+        players.RemoveAll(NotValidPlayer);
+    }
+    
+    void TickUpdate()
+    {
+
+        if(gameStatus == GameState.Game)
+        {
+            GenerateMapStatus();
+        }
+
+        foreach (CarController car in players)
+        {
+            car.StartCoroutine("TickUpdate");
+        }
+    }
+
+    void GenerateMapStatus()
+    {
+
     }
 
     void Update()
@@ -118,7 +171,14 @@ public class Server : MonoBehaviour
         ClientController client;
         if(clientsPending.TryDequeue(out client))
         {
-            CreateCarControllerFromClient(client);
+            if(players.Count > 5) // Which equals six players
+            {
+                client.Close("Match is full!");
+            } else
+            {
+                CreateCarControllerFromClient(client);
+            }
+
         }
         
     }

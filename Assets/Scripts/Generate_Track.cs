@@ -117,6 +117,7 @@ public class Generate_Track : MonoBehaviour
     }
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         generatePath();
         generateCheckpoints();
     }

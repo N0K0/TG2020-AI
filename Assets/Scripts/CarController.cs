@@ -25,8 +25,16 @@ public class ClientController : WebSocketBehavior
     protected override void OnClose(CloseEventArgs e)
     {
         Debug.Log(e.Reason);
+        if(carController == null)
+        {
+            return;
+        }
+
         CarController cc = carController.GetComponent<CarController>();
-        cc.KickPlayer();
+        if(cc != null)
+        {
+            cc.KickPlayer();
+        }
     }
 
     protected override void OnError(ErrorEventArgs e)
@@ -36,17 +44,16 @@ public class ClientController : WebSocketBehavior
 
     public void Close(string reason) {
         base.Close(1001, reason);
-        
     }
 
     public void parseCommand(string command)
     {
-
     }
 
     public ClientController(Server server)
     {
         this.server = server;
+
     }
 }
 
@@ -70,6 +77,9 @@ public class CarController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void TickUpdate() { 
     }
 
     public void KickPlayer()
