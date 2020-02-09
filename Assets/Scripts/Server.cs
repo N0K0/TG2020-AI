@@ -19,12 +19,17 @@ public class GameSocketServer : WebSocketServer
 public class Server : MonoBehaviour
 {
 
-    internal enum GameState : int {Main, Game, Done};
+    AsyncOperation asyncLoadLevel;
+
+    public enum GameState : int {Main, Game, Done};
 
     private WebSocketServer wss = null;
     private List<CarController> players = null;
     private GameObject PlayerHolder = null;
     private GameObject car_prefab = null;
+
+    private RoundController roundController = null;
+
     // Used since i can only make game objects in the main thread
     private ConcurrentQueue<ClientController> clientsPending = new ConcurrentQueue<ClientController>();
     private float TickRate = 1f / 120f; // 120 ticks per sec is the goal
@@ -34,6 +39,10 @@ public class Server : MonoBehaviour
     [System.Obsolete] // TODO: Update the AddWebSocketService method to whatever is new and good
     void Start()
     {
+        roundController = GameObject.Find("RoundController").GetComponent<RoundController>();
+        roundController.server = this;
+
+
         car_prefab = Resources.Load<GameObject>("CarController");
         DontDestroyOnLoad(gameObject);
         players = new List<CarController>();
@@ -43,6 +52,7 @@ public class Server : MonoBehaviour
         InvokeRepeating("TickUpdate", 0f, TickRate);
         wss.Start();
         Debug.Log("WSS Running");
+
     }
 
     public void RegisterClient(ClientController client)
@@ -105,7 +115,6 @@ public class Server : MonoBehaviour
                 lst.Add(car);
             }
         }
-
         return lst;
     }
 
@@ -121,9 +130,19 @@ public class Server : MonoBehaviour
             return;
         }
 
+
         // Lets load the next scene
         SceneManager.LoadScene("GameScene");
         // In the next scene we will also have the RoundController
+
+        SceneManager.sceneLoaded += GameSceneLoaded;
+
+    }
+
+    void GameSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        roundController.InitRound();
+        SceneManager.sceneLoaded -= GameSceneLoaded; // Need this as a oneshot only
     }
 
     private static bool NotValidPlayer(CarController car)
@@ -145,13 +164,11 @@ public class Server : MonoBehaviour
                 car.KickPlayer();
             }
         }
-
         players.RemoveAll(NotValidPlayer);
     }
 
     void TickUpdate()
     {
-
         Debug.Log("Server Tick");
 
         if (gameStatus == GameState.Game)
@@ -165,7 +182,6 @@ public class Server : MonoBehaviour
         {
             car.StartCoroutine("TickUpdate");
         }
-
         Debug.Log("Server Tick Done");
     }
 
@@ -174,8 +190,6 @@ public class Server : MonoBehaviour
         /* This funciton creates the general status of the map all the players need
          * 
          * Mapstatus should contain the following:
-         *
-         * 
          * 
          * 1) The Bezier definition of the track
          * 2) The Vertext definition of the walls of the track
@@ -202,9 +216,7 @@ public class Server : MonoBehaviour
             {
                 CreateCarControllerFromClient(client);
             }
-
         }
-        
     }
 }
 
@@ -216,7 +228,7 @@ class MapStatus
     
 }
 
-class BasicMessage
+class Message
 {
 
     /* Will try to use tihs class as a storage for all the normal outgoing messages for the clients.
@@ -224,14 +236,16 @@ class BasicMessage
      */
 
     public string Type = "INVALID COMMAND. NIKOLAS DUN GOOFED"; // Some fun is allowed :D
+    public string Status  = "OK"; // Lets assume ok unless the opposite is stated
     public string Command = "";
 
     [JsonExtensionData] // This is where all the extra data ends up during parsing
-    public IDictionary<string, JToken> Extras;
+    public IDictionary<string, JToken> Extras = null;
 
     public void RequestUsername() // Same Type is used for setting
     {
         Type = "username";
-        Command = "missing username";
+        Status = "OK"; 
+        Command = "Username OK";
     }
 }

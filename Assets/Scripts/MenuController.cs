@@ -14,7 +14,6 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject canvas_rules = null;
     [SerializeField] private GameObject canvas_lobby = null;
     [SerializeField] private GameObject canvas_lobby_playerlist = null;
-
     [SerializeField] private GameObject canvas_settings = null;
 
     // Menu buttons
@@ -35,7 +34,6 @@ public class MenuController : MonoBehaviour
 
     // Settings buttons
     [SerializeField] private Button settings_back = null;
-
 
 
     //Lobby assets

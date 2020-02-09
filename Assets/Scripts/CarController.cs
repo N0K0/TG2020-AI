@@ -17,12 +17,7 @@ public class CarController : MonoBehaviour
     public bool Playable = true; // Used to check is a player has been DQed. Can't remove the object before after a round is done due to score
     public bool Active = true;
     internal bool Updateable = true;
-
-    // Start is called before the first frame update
-    public void Start()
-    {
-        
-    }
+    internal bool Freeze = true; // Used to lock players at start of round
 
     // Update is called once per frame
     void Update()
@@ -33,7 +28,7 @@ public class CarController : MonoBehaviour
     void TickUpdate() {
         Debug.Log("Running Tick update in car: " + UserName);
         if( server.gameStatus == Server.GameState.Main && UserName.Equals("Anon"))
-        {
+        {   
             clientController.RequestUsername();
         }
     }
@@ -58,15 +53,40 @@ public class CarController : MonoBehaviour
         clientController.Close("CarController was destroyed");
     }
 
-    internal void SetUsername(string username)
+    public void SetUsername(string username)
     {
         // Lets just ignore the possible racecondition and let each user check the server table on its own.
         // Aka, i have no god damn clue how Websocket-sharp threads anything
         //
         // Edit: Apparently neither does the rest of the community
 
+        // Username can't be blank
+        if(username.Length <= 0)
+        {
+            throw new InvalidCommandException("Username can not be empty");
+        }
 
+        // Username can't be Anon
+        if (username.Equals("Anon"))
+        {
+            throw new InvalidCommandException("Anon is not a valid username");
+        }
 
-        foreach
+        // Game can't be live
+        if (server.gameStatus != Server.GameState.Main)
+        {
+            throw new InvalidCommandException("You can not change name when game is live");
+        }
+
+        // Username can't be an others username
+        foreach ( CarController car in server.GetPlayers() ) // No need to check invalid players
+        {
+            if (car.UserName.Equals(username))
+            {
+                throw new InvalidCommandException("Username is already in use");
+            }
+        }
+
+        UserName = username; // Aiight. Nothing wrong thus far
     }
 }

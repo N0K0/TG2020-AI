@@ -15,8 +15,8 @@ public class RoadMeshCreator : PathSceneTool {
     public Material undersideMaterial;
     public float textureTiling = 1;
 
-    [SerializeField, HideInInspector]
-    GameObject meshHolder;
+    [SerializeField]
+    public GameObject meshHolder;
 
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
@@ -125,7 +125,7 @@ public class RoadMeshCreator : PathSceneTool {
         }
 
         meshHolder.transform.rotation = Quaternion.identity;
-        meshHolder.transform.position = new Vector3(0,-10,0);
+        meshHolder.transform.position = new Vector3(0,0,0);
         meshHolder.transform.localScale = Vector3.one;
 
         // Ensure mesh renderer and filter components are assigned

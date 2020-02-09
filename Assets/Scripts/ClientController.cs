@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +14,16 @@ public class ClientController : WebSocketBehavior
 
     protected override void OnMessage(MessageEventArgs e)
     {
-        Debug.Log(e.ToString());
-        parseMessage(e.ToString());
+        Debug.Log(e.Data);
+
+        try
+        {
+            parseMessage(e.Data);
+        } catch (Exception exce)
+        {
+            Debug.LogError(exce.Message);
+        }
+
     }
 
     protected override void OnOpen()
@@ -48,14 +57,30 @@ public class ClientController : WebSocketBehavior
         base.Close(1001, reason);
     }
 
+
+
     public void parseMessage(string message)
     {
-        BasicMessage msg = JsonConvert.DeserializeObject<BasicMessage>(message);
+        Message msg = JsonConvert.DeserializeObject<Message>(message);
 
-        switch (msg.Command)
+        switch (msg.Type)
         {
             // Misc commands (same as doc)
             case "Username":
+                try
+                {
+                    SetUsername(msg.Command);
+
+                } catch (InvalidCommandException e)
+                {
+                    // TODO: This outght to be an method
+                    Message error = new Message();
+                    error.Type = msg.Type;
+                    error.Status = "Error";
+                    error.Command = e.Message;
+                    string str = JsonConvert.SerializeObject(error);
+                    Send(str);
+                }
                 break;
             case "Color":
                 break;
@@ -85,10 +110,16 @@ public class ClientController : WebSocketBehavior
     internal void RequestUsername()
     {
         Debug.Log("Requesting username");
-        BasicMessage message = new BasicMessage();
+        Message message = new Message();
         message.RequestUsername();
         string msg = JsonConvert.SerializeObject(message);
         Debug.Log(msg);
         Send(msg);
     }
+}
+
+[Serializable]
+public class InvalidCommandException : Exception
+{
+    public InvalidCommandException(string error) : base(error) { }
 }
