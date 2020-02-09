@@ -1,61 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using Newtonsoft.Json;
 
-public class ClientController : WebSocketBehavior
-{
-    public GameObject carController = null;
-    private Server server = null;
-
-    protected override void OnMessage(MessageEventArgs e)
-    {
-        Debug.Log(e.ToString());
-        parseCommand(e.ToString());
-    }
-
-    protected override void OnOpen()
-    {
-        Debug.Log("New connection open!");
-        Debug.Log(this.Sessions.Count);
-        server.RegisterClient(this);
-    }
-
-    protected override void OnClose(CloseEventArgs e)
-    {
-        Debug.Log(e.Reason);
-        if(carController == null)
-        {
-            return;
-        }
-
-        CarController cc = carController.GetComponent<CarController>();
-        if(cc != null)
-        {
-            cc.KickPlayer();
-        }
-    }
-
-    protected override void OnError(ErrorEventArgs e)
-    {
-        Debug.LogError(e.Exception);
-    }
-
-    public void Close(string reason) {
-        base.Close(1001, reason);
-    }
-
-    public void parseCommand(string command)
-    {
-    }
-
-    public ClientController(Server server)
-    {
-        this.server = server;
-
-    }
-}
 
 public class CarController : MonoBehaviour
 {
@@ -66,6 +16,7 @@ public class CarController : MonoBehaviour
 
     public bool Playable = true; // Used to check is a player has been DQed. Can't remove the object before after a round is done due to score
     public bool Active = true;
+    internal bool Updateable = true;
 
     // Start is called before the first frame update
     public void Start()
@@ -79,7 +30,12 @@ public class CarController : MonoBehaviour
         
     }
 
-    void TickUpdate() { 
+    void TickUpdate() {
+        Debug.Log("Running Tick update in car: " + UserName);
+        if( server.gameStatus == Server.GameState.Main && UserName.Equals("Anon"))
+        {
+            clientController.RequestUsername();
+        }
     }
 
     public void KickPlayer()
@@ -93,6 +49,7 @@ public class CarController : MonoBehaviour
     {
         Playable = false;
         Active = false;
+        Updateable = false;
         clientController.Close("CarController stopped");
     }
 
@@ -101,4 +58,15 @@ public class CarController : MonoBehaviour
         clientController.Close("CarController was destroyed");
     }
 
+    internal void SetUsername(string username)
+    {
+        // Lets just ignore the possible racecondition and let each user check the server table on its own.
+        // Aka, i have no god damn clue how Websocket-sharp threads anything
+        //
+        // Edit: Apparently neither does the rest of the community
+
+
+
+        foreach
+    }
 }

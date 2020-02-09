@@ -45,7 +45,6 @@ public class MenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         // Menu buttons
         menu_start.onClick.AddListener(() => SwapTo(Windows.Lobby));
         menu_credits.onClick.AddListener(() => SwapTo(Windows.Credits));

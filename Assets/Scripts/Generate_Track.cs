@@ -15,9 +15,7 @@ public class Generate_Track : MonoBehaviour
     public int Points_min = 3;
     public int Points_max = 10;
     public int numCheckpoints; // Checkpoints
-
     private Bounds bounds;
-
 
     private void generatePath()
     {

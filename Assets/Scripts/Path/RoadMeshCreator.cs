@@ -125,7 +125,7 @@ public class RoadMeshCreator : PathSceneTool {
         }
 
         meshHolder.transform.rotation = Quaternion.identity;
-        meshHolder.transform.position = Vector3.zero;
+        meshHolder.transform.position = new Vector3(0,-10,0);
         meshHolder.transform.localScale = Vector3.one;
 
         // Ensure mesh renderer and filter components are assigned
