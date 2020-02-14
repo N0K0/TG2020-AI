@@ -16,17 +16,35 @@ public class GameSocketServer : WebSocketServer
     }
 }
 
+
 public class Server : MonoBehaviour
 {
+    static readonly string[] carColors = {
+        "Blue",
+        "Green",
+        "Purple",
+        "Red",
+        "Silver",
+        "Yellow"
+    };
 
-    AsyncOperation asyncLoadLevel;
+    GameObject[] carPrefabs = new GameObject[6];
+    
+    public enum GameState : int {
+        Main, 
+        Game_Prelude,
+        Game_Running,
+        Done
+    };
 
-    public enum GameState : int {Main, Game, Done};
+    readonly string carPath = "LowPolyCarPack/Prefabs/Car_{0}_{1}";
 
     private WebSocketServer wss = null;
     private List<CarController> players = null;
     private GameObject PlayerHolder = null;
     private GameObject car_prefab = null;
+
+    private int carModelNumber = 1;
 
     private RoundController roundController = null;
 
@@ -36,22 +54,36 @@ public class Server : MonoBehaviour
 
     internal GameState gameStatus = GameState.Main;
 
-    [System.Obsolete] // TODO: Update the AddWebSocketService method to whatever is new and good
     void Start()
     {
+
+        carModelNumber = Random.Range(1, 7);
+
+        float start = Time.unscaledTime;
+        for( int i = 0; i < 6; i++)
+        {
+            string modelPath = string.Format(carPath, carModelNumber, carColors[i]);
+            Debug.Log("Loading: " + modelPath);
+            carPrefabs[i] = Resources.Load<GameObject>(modelPath);
+        }
+
+        Debug.Log("Load models time: " + (Time.unscaledTime - start));
+
         roundController = GameObject.Find("RoundController").GetComponent<RoundController>();
         roundController.server = this;
-
 
         car_prefab = Resources.Load<GameObject>("CarController");
         DontDestroyOnLoad(gameObject);
         players = new List<CarController>();
         wss = new GameSocketServer("ws://localhost:8888");
         // Client controller has a callback to this class in which we instanceiate the gameopbject (must be done in main)
+#pragma warning disable CS0618 // Type or member is obsolete
         wss.AddWebSocketService("/server", () => new ClientController(this) { } ) ;
+#pragma warning restore CS0618 // Type or member is obsolete
         InvokeRepeating("TickUpdate", 0f, TickRate);
         wss.Start();
         Debug.Log("WSS Running");
+
 
     }
 
@@ -93,10 +125,15 @@ public class Server : MonoBehaviour
 
         DontDestroyOnLoad(PlayerHolder);
 
+        int prefabIndex = PlayerHolder.transform.childCount;
+        Debug.Log(prefabIndex);
+
         // TODO: Clean up this mess
         GameObject car_gameobject = Instantiate<GameObject>(car_prefab, PlayerHolder.transform);
         client.carController = car_gameobject;
         CarController carcontroller_component = car_gameobject.GetComponent<CarController>();
+        GameObject car_model = Instantiate<GameObject>(carPrefabs[prefabIndex], car_gameobject.transform);
+        
         carcontroller_component.server = this;
         client.carComponent = carcontroller_component;
 
@@ -130,19 +167,21 @@ public class Server : MonoBehaviour
             return;
         }
 
-
         // Lets load the next scene
         SceneManager.LoadScene("GameScene");
         // In the next scene we will also have the RoundController
 
         SceneManager.sceneLoaded += GameSceneLoaded;
-
     }
 
     void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         roundController.InitRound();
+        GenerateCompleteStatus();
+
+
         SceneManager.sceneLoaded -= GameSceneLoaded; // Need this as a oneshot only
+        gameStatus = GameState.Game_Prelude;
     }
 
     private static bool NotValidPlayer(CarController car)
@@ -171,7 +210,10 @@ public class Server : MonoBehaviour
     {
         Debug.Log("Server Tick");
 
-        if (gameStatus == GameState.Game)
+        if (gameStatus == GameState.Game_Prelude)
+        {
+        }
+        else if (gameStatus == GameState.Game_Running)
         {
         }
         else if (gameStatus == GameState.Main)
@@ -188,6 +230,7 @@ public class Server : MonoBehaviour
     void GenerateCompleteStatus()
     {
         /* This funciton creates the general status of the map all the players need
+         * and sends it to them
          * 
          * Mapstatus should contain the following:
          * 
@@ -196,6 +239,8 @@ public class Server : MonoBehaviour
          * 3) Placement of all the checkpoints
          * 
          */
+
+        
     }
 
     void GeneratePlayerStatus()
@@ -235,7 +280,7 @@ class Message
      * That is, basic is defined as the commands simply containing a type and a simple string
      */
 
-    public string Type = "INVALID COMMAND. NIKOLAS DUN GOOFED"; // Some fun is allowed :D
+    public string Type = "INVALID COMMAND. NIKOLAS DUN GOOFED. SLAP HIM"; // Some fun is allowed :D
     public string Status  = "OK"; // Lets assume ok unless the opposite is stated
     public string Command = "";
 

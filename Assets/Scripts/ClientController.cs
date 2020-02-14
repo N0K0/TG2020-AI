@@ -101,7 +101,6 @@ public class ClientController : WebSocketBehavior
         carComponent.SetUsername(username);
     }
 
-
     public ClientController(Server server)
     {
         this.server = server;

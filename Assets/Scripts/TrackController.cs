@@ -6,7 +6,7 @@ using PathCreation;
 
 
 [RequireComponent(typeof(PathCreator))]
-public class Generate_Track : MonoBehaviour
+public class TrackController : MonoBehaviour
 {
     public GameObject trackArea;
     public GameObject checkpointHolder = null;
@@ -107,6 +107,16 @@ public class Generate_Track : MonoBehaviour
             Instantiate(checkpoint, point, rot, checkpointHolder.transform);
             dst += spacing;
         }
+    }
+
+    public Vector3 getStartPos()
+    {
+        return GetComponent<PathCreator>().path.GetPointAtDistance(0.0f);
+    }
+
+    public Quaternion getStartRotation()
+    {
+        return GetComponent<PathCreator>().path.GetRotationAtDistance(0.0f);
     }
 
     private void generateFoilage()

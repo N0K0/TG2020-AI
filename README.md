@@ -68,15 +68,15 @@ Both are based on the Type field which is the same as the command sent. And a st
 ```json
 {
 	"Type": "Username",
-    "Status": "OK"
+    "Status": "OK",
 	"Command": "Username set!"
 }
 ```
 
 ```json
 {
-	"Type": "Username"
-    "Status": "ERROR"
+	"Type": "Username",
+    "Status": "ERROR",
 	"Command": "Username already in use, set an other if "
 
 }
@@ -100,7 +100,7 @@ Both are based on the Type field which is the same as the command sent. And a st
 
 ```json
 {
-	"Type": "Username"
+	"Type": "Username",
 	"Command": "The username i want"
 }
 ```
@@ -111,7 +111,7 @@ Generic returns
 
 
 
-##### Set color trace:
+##### Set color tracace:
 
 _At the time of writing I have not decided what to do if someone recalls this command ;)_
 
@@ -119,7 +119,7 @@ _At the time of writing I have not decided what to do if someone recalls this co
 
 ```json
 {
-	"Type": "Color"
+	"Type": "Color",
 	"Command": "00FFA3"
 }
 ```

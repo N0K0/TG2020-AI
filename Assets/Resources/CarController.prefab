@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1695027824276853690}
   m_Layer: 0
   m_Name: CarController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,4 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a236ad839f0dce44868dc79ccaca72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Anon
+  server: {fileID: 0}
+  UserName: Anon
+  Playable: 1
+  Active: 1
