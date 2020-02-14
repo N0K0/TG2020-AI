@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2336936}
   - component: {fileID: 1743768215541258370}
   - component: {fileID: 860612125249489038}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WheelP-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -68,6 +69,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -122,7 +124,7 @@ GameObject:
   - component: {fileID: 2369410}
   - component: {fileID: 3007871229486157470}
   - component: {fileID: 5551228913772877917}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WheelP-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,6 +167,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -177,6 +180,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -231,7 +235,7 @@ GameObject:
   - component: {fileID: 2375230}
   - component: {fileID: 3920878669327478446}
   - component: {fileID: 1381992166359000199}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WheelP-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,6 +278,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -286,6 +291,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -340,7 +346,7 @@ GameObject:
   - component: {fileID: 2393662}
   - component: {fileID: -4525796643108761195}
   - component: {fileID: -1885738051652734280}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Policecar
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -387,6 +393,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -400,6 +407,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -454,7 +462,7 @@ GameObject:
   - component: {fileID: 2378534}
   - component: {fileID: 2097346209305968448}
   - component: {fileID: 2076917736741900250}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WheelP-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,6 +505,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -509,6 +518,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
