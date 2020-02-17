@@ -19,18 +19,42 @@ public class CarController : MonoBehaviour
     internal bool Updateable = true;
     internal bool Freeze = true; // Used to lock players at start of round
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public bool[] checkpointsHit; // This bool contains the hits
+
+    // The stuff that makes the car go wroom
+    private Vector3 targetAngle;
+    private Vector3 targetThrust;
+
+    private bool pointLockon; // This is active
+
+    private float thrustLevel; // Used to regulate the turnrate and how big of an impulse that is outputted
+    private float turnLevel;
 
     void TickUpdate() {
         Debug.Log("Running Tick update in car: " + UserName);
-        if( server.gameStatus == Server.GameState.Main && UserName.Equals("Anon"))
-        {   
-            clientController.RequestUsername();
+
+        // Breaking up the tests into which state the server has
+        switch( server.GameStatus)
+        {
+            case Server.GameState.Main:
+                if (UserName.Equals("Anon"))
+                {
+                    clientController.RequestUsername();
+                }
+
+                break;
+
+            case Server.GameState.Game_Prelude:
+            case Server.GameState.Game_Running:
+                string status = server.GeneratePlayerStatus(this);
+                break;
+
+            default:
+                Debug.LogError("Tick update hit wrongful state");
+                break;
         }
+
+
     }
 
     public void KickPlayer()
@@ -73,7 +97,7 @@ public class CarController : MonoBehaviour
         }
 
         // Game can't be live
-        if (server.gameStatus != Server.GameState.Main)
+        if (server.GameStatus != Server.GameState.Main)
         {
             throw new InvalidCommandException("You can not change name when game is live");
         }
@@ -88,5 +112,25 @@ public class CarController : MonoBehaviour
         }
 
         UserName = username; // Aiight. Nothing wrong thus far
+    }
+
+    public bool getLockon()
+    {
+        return pointLockon;
+    }
+
+    public void setLockon(bool val)
+    {
+        pointLockon = val;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Trigger event for car: " + this.UserName);
+    }
+
+    internal void SendMapStatus()
+    {
+        clientController.SendMapStatus();
     }
 }

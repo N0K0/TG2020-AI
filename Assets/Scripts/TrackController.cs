@@ -9,13 +9,14 @@ using PathCreation;
 public class TrackController : MonoBehaviour
 {
     public GameObject trackArea;
-    public GameObject checkpointHolder = null;
 
     public BezierPath trackPath;
     public int Points_min = 3;
     public int Points_max = 10;
     public int numCheckpoints; // Checkpoints
     private Bounds bounds;
+
+    public GameObject checkpointHolder = null;
 
     private void generatePath()
     {
@@ -38,8 +39,8 @@ public class TrackController : MonoBehaviour
             float x = Random.Range(bounds.center.x - size_x / 2, bounds.center.x + size_x / 2);
             float z = Random.Range(bounds.center.z - size_z / 2, bounds.center.z + size_z / 2);
             float y = 1;
-            // I want to use some dumb raycasting so that the Y level always is on top of the terrain
 
+            // I want to use some dumb raycasting so that the Y level always is on top of the terrain
             RaycastHit hit;
             if(Physics.Raycast(new Vector3(x, 10000, z), Vector3.down, out hit))
             {

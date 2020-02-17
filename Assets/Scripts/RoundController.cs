@@ -11,8 +11,8 @@ public class RoundController : MonoBehaviour
     List<GameObject> cars = null;
     GameObject ui = null;
 
-    GameObject checkPointHolder = null;
-    List<GameObject> checkpoints = null;
+    public GameObject checkPointHolder = null;
+    public List<Checkpoint> checkpoints = null;
 
     float countDownTime = 10;
     float currCountdownValue = 10;
@@ -24,12 +24,6 @@ public class RoundController : MonoBehaviour
         cars = new List<GameObject>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void FreezePlayers(bool freeze)
     {
         foreach( CarController car in server.GetPlayers())
@@ -37,6 +31,12 @@ public class RoundController : MonoBehaviour
             car.Freeze = freeze; // I might be retarded. This is the same as Is Kinematic
             car.GetComponentInChildren<Rigidbody>().isKinematic = freeze;
         }
+    }
+
+    internal void notifyHit(CarController carController)
+    {
+        Debug.Log("Notify hit: + " + carController.UserName);
+        throw new NotImplementedException();
     }
 
     void UpdateLeaderBoard()
@@ -69,7 +69,7 @@ public class RoundController : MonoBehaviour
         }
         UnfreezePlayers();
         ui.SetActive(false);
-        server.gameStatus = Server.GameState.Game_Running;
+        server.GameStatus = Server.GameState.Game_Running;
     }
 
     internal void InitRound()
@@ -77,21 +77,33 @@ public class RoundController : MonoBehaviour
         // Start figuring out the checkpoints and set the pos of the players
 
         playerHolder = GameObject.Find("PlayerHolder");
-        checkPointHolder = GameObject.Find("Checkpoints");
+        GameObject cps = GameObject.Find("Checkpoints");
+        checkpoints = new List<Checkpoint>(cps.GetComponents<Checkpoint>());
+
         TrackController tc = GameObject.Find("MapController").GetComponent<TrackController>();
 
         Vector3 startPos = tc.getStartPos() + new Vector3(0, 5, 0);
         Quaternion startRotation = tc.getStartRotation() * Quaternion.Euler(90, 0, 90);
 
+        string mapStatusStr = server.GenerateCompleteStatus();
+        server.mapStatusStr = mapStatusStr;
         // Send players the mapdata
-
         foreach ( CarController car in server.GetPlayers())
         {   
             cars.Add(car.gameObject);
+            car.checkpointsHit = new bool[checkpoints.Count];
             car.transform.position = startPos;
             car.transform.rotation = startRotation;
+            car.SendMapStatus();
+        }
+
+        for(int i = 0; i < checkpoints.Count; i++)
+        {
+            checkpoints[i].setId(i);
+            checkpoints[i].setRoundController(this);
         }
 
         StartCoroutine("CountDownToStart");
+        Debug.Break();
     }
 }

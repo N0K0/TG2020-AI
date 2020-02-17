@@ -50,7 +50,7 @@ public class RoadMeshCreator : PathSceneTool {
         int[] triangleMap = { 0, 8, 1, 1, 8, 9 };
         int[] sidesTriangleMap = { 4, 6, 14, 12, 4, 14, 5, 15, 7, 13, 15, 5 };
 
-        bool usePathNormals = !(path.space == PathSpace.xyz && flattenSurface);
+        bool usePathNormals = !(true && flattenSurface);
 
         for (int i = 0; i < path.NumPoints; i++) {
             Vector3 localUp = (usePathNormals) ? Vector3.Cross (path.GetTangent (i), path.GetNormal (i)) : path.up;
