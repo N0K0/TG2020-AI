@@ -642,7 +642,7 @@ namespace PathCreationEditor {
         }
 
         void LoadDisplaySettings () {
-            globalDisplaySettings = GlobalDisplaySettings.Load ();
+            globalDisplaySettings = GlobalDisplaySettings.Load();
 
             capFunctions = new Dictionary<GlobalDisplaySettings.HandleType, Handles.CapFunction> ();
             capFunctions.Add (GlobalDisplaySettings.HandleType.Circle, Handles.CylinderHandleCap);

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,27 +13,16 @@ public class ClientController : WebSocketBehavior
     internal Server server = null;
     internal CarController carComponent = null;
 
-
     internal int mapRequestsLeft = 5;
 
     protected override void OnMessage(MessageEventArgs e)
     {
-        Debug.Log(e.Data);
-
-        try
-        {
-            parseMessage(e.Data);
-        } catch (Exception exce)
-        {
-            Debug.LogError(exce.Message);
-        }
-
+        parseMessage(e.Data);
     }
 
     protected override void OnOpen()
     {
-        Debug.Log("New connection open!");
-        Debug.Log(this.Sessions.Count);
+        Debug.Log("New connection open! " + this.Sessions.Count);
         server.RegisterClient(this);
     }
 
@@ -53,6 +43,10 @@ public class ClientController : WebSocketBehavior
     protected override void OnError(ErrorEventArgs e)
     {
         Debug.LogError(e.Exception);
+
+        Message error = new Message();
+        error.Error(error.Type, e.Message);
+        Send(JsonConvert.SerializeObject(error));
     }
 
     public void Close(string reason)
@@ -106,40 +100,65 @@ public class ClientController : WebSocketBehavior
         throw new NotImplementedException();
     }
 
-    void moveToPoints(Message msg)
+    void moveToPoint(Message msg)
     {
         carComponent.setLockon(true);
-        throw new NotImplementedException();
+        JToken token = JObject.Parse(msg.Command);
+        float x = token.SelectToken("x").Value<float>();
+        float z = token.SelectToken("z").Value<float>();
+
+        //Debug.Log(msg.Command);
+        // This function is a bit special, 
+        // its to help players that don't want to do everything on their own.
+        carComponent.moveToPoint(x, z);
     }
 
     void turnAngle(Message msg)
     {
         carComponent.setLockon(false);
-        throw new NotImplementedException();
+        JToken token = JObject.Parse(msg.Command);
+        float angle = token.SelectToken("angle").Value<float>();
+
+        // The target angle relativ to the world
+        carComponent.turnAngle(angle);
     }
 
     void setPower(Message msg)
     {
         carComponent.setLockon(false);
-        throw new NotImplementedException();
+        JToken token = JObject.Parse(msg.Command);
+        float value = token.SelectToken("value").Value<float>();
+        carComponent.setPower(value);
     }
 
     void setTurnRate(Message msg)
     {
         carComponent.setLockon(false);
-        throw new NotImplementedException();
+        JToken token = JObject.Parse(msg.Command);
+        float value = token.SelectToken("value").Value<float>();
+        carComponent.setTurnRate(value);
     }
 
     void startThrust(Message msg)
     {
         carComponent.setLockon(false);
-        throw new NotImplementedException();
+        JToken token = JObject.Parse(msg.Command);
+        float value = token.SelectToken("value").Value<float>();
+        carComponent.startThrust(value);
     }
 
     public void parseMessage(string message)
     {
-        Message msg = JsonConvert.DeserializeObject<Message>(message);
 
+        JsonSerializerSettings settings = new JsonSerializerSettings();
+        settings.MaxDepth = 1;
+
+        JToken token = JObject.Parse(message);
+        Message msg = new Message();
+        msg.Type = token.SelectToken("Type").Value<string>();
+        msg.Command = token.SelectToken("Command").ToString();
+
+        // Debug.Log(msg.Command);
         switch (msg.Type)
         {
             // Misc commands (same as doc)
@@ -149,37 +168,35 @@ public class ClientController : WebSocketBehavior
             case "Color":
                 color(msg);
                 break;
-            case "fullmap":
+            case "fullMap":
                 fullmap(msg);
                 break;
-            case "allplayers":
+            case "allPlayers":
                 allplayers(msg);
                 break;
-            case "movetopoint":
-                moveToPoints(msg);
+            case "moveToPoint":
+                moveToPoint(msg);
                 break;
-            case "turnangle":
+            case "turnAngle":
                 turnAngle(msg);
                 break;
             case "startThrust":
                 startThrust(msg);
                 break;
-            case "setpower":
+            case "setPower":
                 setPower(msg);
                 break;
-            case "setturnrate":
+            case "setTurnRate":
                 setTurnRate(msg);
                 break;
 
-
             default:
-                Debug.LogError("User sent command i do not know what is");
-                Debug.LogError(message);
+                UnityEngine.Debug.LogError("User sent command i do not know what is");
+                UnityEngine.Debug.LogError(message);
 
                 Message invalid = new Message();
                 invalid.Error("InvalidCommand","Unknown command sent");
                 Send(JsonConvert.SerializeObject(invalid));
-
                 break;
         }
     }
@@ -193,9 +210,10 @@ public class ClientController : WebSocketBehavior
 
     internal void SendPlayerStatus()
     {
-        string status = server.GeneratePlayerStatus(this);
+        string status = server.GeneratePlayerStatus(this.carComponent);
         Message data = new Message();
-        data.PlayerStatus()
+        data.PlayerStatus(status);
+        Send(JsonConvert.SerializeObject(data));
     }
 
     public void SetUsername(string username)
@@ -215,7 +233,7 @@ public class ClientController : WebSocketBehavior
         Message message = new Message();
         message.RequestUsername();
         string msg = JsonConvert.SerializeObject(message);
-        Debug.Log(msg);
+        //Debug.Log(msg);
         Send(msg);
     }
 }

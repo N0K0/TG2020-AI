@@ -174,7 +174,8 @@ GameObject:
   - component: {fileID: 3324316}
   - component: {fileID: 2315196}
   - component: {fileID: -8339901097651499415}
-  - component: {fileID: 1496905430957411849}
+  - component: {fileID: 2840988754762999585}
+  - component: {fileID: 175406292396092839}
   m_Layer: 8
   m_Name: Car_2_Purple
   m_TagString: Player
@@ -189,7 +190,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160038}
-  m_LocalRotation: {x: 0.000000021855698, y: -0.00000003774895, z: 8.250296e-16, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
@@ -199,7 +200,7 @@ Transform:
   - {fileID: 430610}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &3324316
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -256,13 +257,13 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160038}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 384c547070eb95c4a864d4d37396c3d6, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.052652203, y: 0.013264355, z: 0.02094319}
   m_Center: {x: 0.000042407773, y: 0.000832587, z: -4.656613e-10}
---- !u!54 &1496905430957411849
+--- !u!54 &2840988754762999585
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,14 +271,26 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160038}
   serializedVersion: 2
-  m_Mass: 2600
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 2000
+  m_Drag: 0.1
+  m_AngularDrag: 0.1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &175406292396092839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5de67e136ef2df42bcb68b9c18fe326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &181436
 GameObject:
   m_ObjectHideFlags: 0

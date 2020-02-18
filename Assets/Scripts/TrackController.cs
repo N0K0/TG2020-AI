@@ -73,6 +73,8 @@ public class TrackController : MonoBehaviour
 
         GameObject road = GameObject.Find("Road Mesh Holder");
         MeshCollider roadCollider = road.GetComponent<MeshCollider>();
+        Destroy(roadCollider);
+        roadCollider = road.AddComponent<MeshCollider>();
         MeshFilter roadMesh = road.GetComponent<MeshFilter>();
         roadCollider.sharedMesh = roadMesh.mesh;
     }
@@ -82,7 +84,6 @@ public class TrackController : MonoBehaviour
         GameObject startpoint = Resources.Load<GameObject>("Startpoint");
         GameObject checkpoint = Resources.Load<GameObject>("Checkpoint");
         PathCreator pc = GetComponent<PathCreator>();
-        
 
         if (checkpointHolder == null){
             GameObject obj = new GameObject();
@@ -95,10 +96,7 @@ public class TrackController : MonoBehaviour
         float spacing = path.length  / numCheckpoints;
         float dst = 0;
 
-        // Startpoint:
-        Vector3 point_start = path.GetPointAtDistance(dst);
-        Quaternion rot_start = path.GetRotationAtDistance(dst) * Quaternion.Euler(90, 0, 90);
-        Instantiate(startpoint, point_start, rot_start, checkpointHolder.transform);
+
         dst += spacing;
 
         while (dst < path.length)
@@ -108,6 +106,12 @@ public class TrackController : MonoBehaviour
             Instantiate(checkpoint, point, rot, checkpointHolder.transform);
             dst += spacing;
         }
+
+        // Startpoint:
+        // Add the startpoint last since its the last checkpoint technically
+        Vector3 point_start = path.GetPointAtDistance(0);
+        Quaternion rot_start = path.GetRotationAtDistance(0) * Quaternion.Euler(90, 0, 90);
+        Instantiate(startpoint, point_start, rot_start, checkpointHolder.transform);
     }
 
     public Vector3 getStartPos()

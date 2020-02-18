@@ -12,10 +12,10 @@ public class RoundController : MonoBehaviour
     GameObject ui = null;
 
     public GameObject checkPointHolder = null;
-    public List<Checkpoint> checkpoints = null;
+    public Checkpoint[] checkpoints = null;
 
-    float countDownTime = 10;
-    float currCountdownValue = 10;
+    float countDownTime = 3;
+    float currCountdownValue = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -29,14 +29,44 @@ public class RoundController : MonoBehaviour
         foreach( CarController car in server.GetPlayers())
         {
             car.Freeze = freeze; // I might be retarded. This is the same as Is Kinematic
-            car.GetComponentInChildren<Rigidbody>().isKinematic = freeze;
+            car.GetComponentInParent<Rigidbody>().isKinematic = freeze;
         }
     }
 
-    internal void notifyHit(CarController carController)
+    internal void notifyHit(CarController carController, Checkpoint checkpoint)
     {
-        Debug.Log("Notify hit: + " + carController.UserName);
-        throw new NotImplementedException();
+        Debug.Log("Notify hit (" + checkpoint.getId() + ") "+ carController.UserName);
+        // TODO: CHECK IS THIS IS THE CORRECT CHECKPOINT
+
+        int index = carController.GetNextCheckpointindex();
+        if(checkpoint.getId() == index)
+        {
+            Debug.Log("Next Checkpoint hit!");
+            carController.checkpointsHit[index] = true;
+        }
+
+       if( index == carController.checkpointsHit.Length -1)
+        {
+            notifyDone(carController);
+        }
+        
+    }
+
+    internal void notifyDone(CarController carController)
+    {
+        carController.DoneWithRace = true;
+
+        bool notDone = false;
+        foreach (CarController car in server.GetPlayers())
+        {
+            if (!car.DoneWithRace)
+            {
+                notDone = true;
+                break;
+            }
+        }
+
+        server.GameDone();
     }
 
     void UpdateLeaderBoard()
@@ -63,7 +93,7 @@ public class RoundController : MonoBehaviour
         while (currCountdownValue > 0)
         {
             text.text = "Countdown: " + currCountdownValue.ToString() + " sec";
-            Debug.Log("Countdown: " + currCountdownValue);
+            //Debug.Log("Countdown: " + currCountdownValue);
             yield return new WaitForSeconds(1.0f);
             currCountdownValue--;
         }
@@ -78,7 +108,8 @@ public class RoundController : MonoBehaviour
 
         playerHolder = GameObject.Find("PlayerHolder");
         GameObject cps = GameObject.Find("Checkpoints");
-        checkpoints = new List<Checkpoint>(cps.GetComponents<Checkpoint>());
+
+        checkpoints = cps.GetComponentsInChildren<Checkpoint>();
 
         TrackController tc = GameObject.Find("MapController").GetComponent<TrackController>();
 
@@ -91,19 +122,18 @@ public class RoundController : MonoBehaviour
         foreach ( CarController car in server.GetPlayers())
         {   
             cars.Add(car.gameObject);
-            car.checkpointsHit = new bool[checkpoints.Count];
-            car.transform.position = startPos;
-            car.transform.rotation = startRotation;
+
+            car.checkpointsHit = new bool[checkpoints.Length];
+            car.transform.parent.transform.position = startPos;
+            car.transform.parent.rotation = startRotation;
             car.SendMapStatus();
         }
 
-        for(int i = 0; i < checkpoints.Count; i++)
+        for(int i = 0; i < checkpoints.Length; i++)
         {
             checkpoints[i].setId(i);
-            checkpoints[i].setRoundController(this);
         }
 
         StartCoroutine("CountDownToStart");
-        Debug.Break();
     }
 }

@@ -47,3 +47,9 @@ MonoBehaviour:
   UserName: Anon
   Playable: 1
   Active: 1
+  checkpointsHit: 
+  targetDir: {x: 0, y: 0, z: 0}
+  thrustRemaining: 0
+  targetPoint: {x: 0, y: 0, z: 0}
+  thrustLevel: 0
+  turnLevel: 0

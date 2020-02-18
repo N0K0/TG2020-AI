@@ -30,6 +30,15 @@ public class Server : MonoBehaviour
         "Yellow"
     };
 
+    static readonly Color[] realColors = {
+        Color.blue,
+        Color.green,
+        new Color(106,13,173),
+        Color.red,
+        new Color(192,192,192),
+        Color.yellow
+    };
+
     GameObject[] carPrefabs = new GameObject[6];
     
     public enum GameState : int {
@@ -92,6 +101,10 @@ public class Server : MonoBehaviour
 
     }
 
+    internal void GameDone()
+    {
+    }
+
     public void RegisterClient(ClientController client)
     {
         // Needed since CarController must be made in the main thread
@@ -131,18 +144,24 @@ public class Server : MonoBehaviour
         DontDestroyOnLoad(PlayerHolder);
 
         int prefabIndex = PlayerHolder.transform.childCount;
-        Debug.Log(prefabIndex);
 
         // TODO: Clean up this mess
-        GameObject car_gameobject = Instantiate<GameObject>(car_prefab, PlayerHolder.transform);
-        client.carController = car_gameobject;
+        GameObject car_gameobject = Instantiate<GameObject>(car_prefab);
+        GameObject car_model = Instantiate<GameObject>(carPrefabs[prefabIndex]);
+        DontDestroyOnLoad(car_model);
+
+        car_gameobject.transform.SetParent(car_model.transform);
+        car_model.transform.SetParent(PlayerHolder.transform);
+
         CarController carcontroller_component = car_gameobject.GetComponent<CarController>();
-        GameObject car_model = Instantiate<GameObject>(carPrefabs[prefabIndex], car_gameobject.transform);
+
+        client.carController = car_gameobject;
         
         carcontroller_component.server = this;
         client.carComponent = carcontroller_component;
 
         carcontroller_component.clientController = client;
+        carcontroller_component.debug_color = realColors[players.Count];
         players.Add(carcontroller_component);
     }
 
@@ -181,10 +200,16 @@ public class Server : MonoBehaviour
 
     void GameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        roundController.InitRound();
+        if (scene.name.Equals("GameScene"))
+        {
+            roundController.InitRound();
+            GameStatus = GameState.Game_Prelude;
+        } else if (scene.name.Equals("GameDone"))
+        {
+            GameStatus = GameState.Done;
+            Debug.Log("GAME DONE!");
+        }
 
-        SceneManager.sceneLoaded -= GameSceneLoaded; // Need this as a oneshot only
-        GameStatus = GameState.Game_Prelude;
     }
 
     private static bool NotValidPlayer(CarController car)
@@ -230,10 +255,6 @@ public class Server : MonoBehaviour
         Debug.Log("Server Tick Done");
     }
 
-    
-
-
-
     void Update()
     {
         // Update car controllers
@@ -250,38 +271,29 @@ public class Server : MonoBehaviour
         }
     }
 
-
-    /*
-    public List<bool> checkpointsHit;
-    public Vector3Json pos;
-    public Vector3Json rotation;
-    public Vector3Json checkpoint_next_pos;
-    public Vector3Json checkpoint_next_rot;
-     */
-
     public string GeneratePlayerStatus(CarController player)
     {
         PlayerStatus ps = new PlayerStatus();
 
-        ps.pos = player.transform.position;
-        ps.rotation = player.transform.rotation.eulerAngles;
+        Vector3 pos = player.transform.parent.position;
+        Quaternion rot = player.transform.parent.rotation;
+
+        ps.pos = pos;
+        ps.rotation = rot.eulerAngles;
 
         // Find next checkpoint for player
-        int index;
-        for( index = 0; index < player.checkpointsHit.Length; index++)
-        {
-            if (player.checkpointsHit[index] == false)
-            {
-                break;
-            }
-        }
+        int index = player.GetNextCheckpointindex();
 
         Checkpoint checkpoint = roundController.checkpoints[index];
 
         ps.checkpoint_next_pos = checkpoint.transform.position;
         ps.checkpoint_next_rot = checkpoint.transform.rotation.eulerAngles;
+        ps.thrustpower = player.thrustLevel;
+        ps.turnrate = player.turnLevel;
+        ps.thrustRemaining = player.thrustRemaining;
+        ps.targetAngle = player.targetDir.y;
 
-        Debug.DrawLine(ps.pos, ps.checkpoint_next_pos);
+        Debug.DrawLine(ps.pos, ps.checkpoint_next_pos, player.debug_color);
 
         return JsonConvert.SerializeObject(ps);
     }
@@ -357,7 +369,7 @@ public class Server : MonoBehaviour
         }
 
         string mapStatusJson = JsonConvert.SerializeObject(mapStatus);
-        Debug.Log(mapStatusJson);
+        //Debug.Log(mapStatusJson);
         
         if (debug)
         {
@@ -369,7 +381,7 @@ public class Server : MonoBehaviour
                 Debug.DrawLine(point_l1, point_l2, Color.red);
 
                 // Right
-                Vector3 point_r1 = mapStatus.wallLeft[i - 1];
+                Vector3 point_r1 = mapStatus.wallLeft[i - 1]; 
                 Vector3 point_r2 = mapStatus.wallLeft[i];
                 Debug.DrawLine(point_r1, point_r2, Color.blue);
             }
@@ -481,9 +493,6 @@ class Message
     public string Status  = "OK"; // Lets assume ok unless the opposite is stated
     public string Command = "";
 
-    [JsonExtensionData] // This is where all the extra data ends up during parsing
-    public IDictionary<string, JToken> Extras = null;
-
     public void RequestUsername() // Same Type is used for setting
     {
         Type = "username";
@@ -493,7 +502,7 @@ class Message
 
     public void MapStatus(string serializedMapData)
     {
-        Type = "fullmap";
+        Type = "fullMap";
         Status = "OK";
         Command = serializedMapData;
     }
@@ -501,7 +510,7 @@ class Message
 
     internal void PlayerStatus(string serializedMapData)
     {
-        Type = "playerstatus";
+        Type = "playerStatus";
         Status = "OK";
         Command = serializedMapData;
     }

@@ -578,7 +578,8 @@ GameObject:
   - component: {fileID: 3363914}
   - component: {fileID: 2364710}
   - component: {fileID: -8029497383000989664}
-  - component: {fileID: 3241485797925484212}
+  - component: {fileID: -2484584248868014064}
+  - component: {fileID: 7888803478441773061}
   m_Layer: 8
   m_Name: Truck_1_Silver
   m_TagString: Player
@@ -593,7 +594,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154144}
-  m_LocalRotation: {x: 0.000000021855698, y: -0.00000003774895, z: 8.250296e-16, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
@@ -608,7 +609,7 @@ Transform:
   - {fileID: 476280}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &3363914
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -665,13 +666,13 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154144}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 384c547070eb95c4a864d4d37396c3d6, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.0803933, y: 0.035457246, z: 0.02936099}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &3241485797925484212
+--- !u!54 &-2484584248868014064
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -679,14 +680,26 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154144}
   serializedVersion: 2
-  m_Mass: 2600
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 2000
+  m_Drag: 0.1
+  m_AngularDrag: 0.1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7888803478441773061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5de67e136ef2df42bcb68b9c18fe326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &167224
 GameObject:
   m_ObjectHideFlags: 0
