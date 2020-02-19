@@ -103,6 +103,7 @@ public class Server : MonoBehaviour
 
     internal void GameDone()
     {
+        SceneManager.LoadScene("GameScene");
     }
 
     public void RegisterClient(ClientController client)
@@ -122,6 +123,8 @@ public class Server : MonoBehaviour
 
     public void CreateCarControllerFromClient(ClientController client)
     {
+
+
         if(PlayerHolder == null )
        {
             print("Playerholder was empty");
@@ -261,7 +264,12 @@ public class Server : MonoBehaviour
         ClientController client;
         if(clientsPending.TryDequeue(out client))
         {
-            if(players.Count > 5) // Which equals six players
+            if (GameStatus != GameState.Main)
+            {
+                client.Close("Match is in progress!");
+            }
+
+            if (players.Count > 5) // Which equals six players
             {
                 client.Close("Match is full!");
             } else

@@ -56,17 +56,20 @@ public class RoundController : MonoBehaviour
     {
         carController.DoneWithRace = true;
 
-        bool notDone = false;
+        bool done = true;
         foreach (CarController car in server.GetPlayers())
         {
             if (!car.DoneWithRace)
             {
-                notDone = true;
+                done = false;
                 break;
             }
         }
 
-        server.GameDone();
+        if (done)
+        {
+            server.GameDone();
+        }
     }
 
     void UpdateLeaderBoard()

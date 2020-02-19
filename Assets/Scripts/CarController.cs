@@ -20,7 +20,6 @@ public class CarController : MonoBehaviour
     internal bool Freeze = true; // Used to lock players at start of round
 
 
-
     internal Color debug_color;
 
     Vector3 pos;
@@ -43,7 +42,6 @@ public class CarController : MonoBehaviour
     private float turnLevelMax;
     private float velLevelMax;
 
-
     private float thrustLevelMaxRoad; // Used to regulate the turnrate and how big of an impulse that is outputted
     private float turnLevelMaxRoad;
     private float velLevelMaxRoad;
@@ -57,6 +55,10 @@ public class CarController : MonoBehaviour
 
     void Start()
     {
+
+        targetDir = Vector3.forward;
+        targetPoint = Vector3.zero;
+
         thrustLevel = 100f;
         turnLevel = 60f;
 
@@ -99,7 +101,7 @@ public class CarController : MonoBehaviour
             rigidbody.freezeRotation = true;
             rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, velMax);
 
-            if (pointLockon)
+            if (pointLockon) // This bool is flipped based on move to point vs manually setting angles
             {
                 float turn = Mathf.Clamp(turnLevel, 0.001f, turnMax);
                 Quaternion targetRotation = Quaternion.LookRotation(targetPoint - pos, Vector3.up) * Quaternion.Euler(0f, -90f, 0f);
@@ -108,10 +110,10 @@ public class CarController : MonoBehaviour
             }
             else
             {
-                targetPoint = Vector3.zero;
-
-                // 
-
+                float turn = Mathf.Clamp(turnLevel, 0.001f, turnMax);
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir, Vector3.up) * Quaternion.Euler(0f, -90f, 0f);
+                float singleStep = turn * Time.deltaTime;
+                transform.parent.rotation = Quaternion.RotateTowards(rot, targetRotation, singleStep);
             }
 
             if (thrustRemaining > 0)
@@ -124,6 +126,7 @@ public class CarController : MonoBehaviour
             }
         }
     }
+
 
     void TickUpdate() {
         //Debug.Log("Running Tick update in car: " + UserName);
@@ -227,6 +230,20 @@ public class CarController : MonoBehaviour
 
     internal void turnAngle(float angle)
     {
+        Debug.Log("Turn angle: " + angle);
+        targetDir = DirFromAngle(angle);
+    }
+
+    internal void turnAngleRelative(float angle)
+    {
+        targetDir = Quaternion.Euler(0f, angle, 0f) * targetDir;
+        Debug.Log(angle);
+        Debug.Log(targetDir);
+    }
+
+    public Vector3 DirFromAngle(float angleInDegree)
+    {
+        return new Vector3(Mathf.Sin(angleInDegree * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegree * Mathf.Deg2Rad));
     }
 
     public void moveToPoint(float x, float z)

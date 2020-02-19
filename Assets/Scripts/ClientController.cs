@@ -117,10 +117,20 @@ public class ClientController : WebSocketBehavior
     {
         carComponent.setLockon(false);
         JToken token = JObject.Parse(msg.Command);
-        float angle = token.SelectToken("angle").Value<float>();
+        float angle = token.SelectToken("value").Value<float>();
 
         // The target angle relativ to the world
         carComponent.turnAngle(angle);
+    }
+
+    private void turnAngleRelative(Message msg)
+    {
+        carComponent.setLockon(false);
+        JToken token = JObject.Parse(msg.Command);
+        float angle = token.SelectToken("value").Value<float>();
+
+        // The target angle relativ to the world
+        carComponent.turnAngleRelative(angle);
     }
 
     void setPower(Message msg)
@@ -180,7 +190,10 @@ public class ClientController : WebSocketBehavior
             case "turnAngle":
                 turnAngle(msg);
                 break;
-            case "startThrust":
+            case "turnAngleRelative":
+                turnAngleRelative(msg);
+                break;
+            case "thrust":
                 startThrust(msg);
                 break;
             case "setPower":
@@ -191,8 +204,8 @@ public class ClientController : WebSocketBehavior
                 break;
 
             default:
-                UnityEngine.Debug.LogError("User sent command i do not know what is");
-                UnityEngine.Debug.LogError(message);
+                Debug.LogError("User sent command i do not know what is");
+                Debug.LogError(message);
 
                 Message invalid = new Message();
                 invalid.Error("InvalidCommand","Unknown command sent");
@@ -201,11 +214,14 @@ public class ClientController : WebSocketBehavior
         }
     }
 
+
+
     internal void SendMapStatus()
     {
         Message data = new Message();
         data.MapStatus(server.mapStatusStr);
-        Send(JsonConvert.SerializeObject(data));
+        string str = JsonConvert.SerializeObject(data);
+        Send(str);
     }
 
     internal void SendPlayerStatus()
@@ -213,7 +229,8 @@ public class ClientController : WebSocketBehavior
         string status = server.GeneratePlayerStatus(this.carComponent);
         Message data = new Message();
         data.PlayerStatus(status);
-        Send(JsonConvert.SerializeObject(data));
+        string str = JsonConvert.SerializeObject(data);
+        Send(str);
     }
 
     public void SetUsername(string username)
