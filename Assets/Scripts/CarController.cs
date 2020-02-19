@@ -212,7 +212,7 @@ public class CarController : MonoBehaviour
 
     internal void setTurnRate(float value)
     {
-        float power = Mathf.Clamp(value, 1f, 30f);
+        float power = Mathf.Clamp(value, 1f, turnLevelMaxRoad);
         turnLevel = power;
     }
 
@@ -224,7 +224,7 @@ public class CarController : MonoBehaviour
 
     internal void setPower(float value)
     {
-        float power = Mathf.Clamp(value, 1f, 30f);
+        float power = Mathf.Clamp(value, 1f, thrustLevelMaxRoad);
         thrustLevel = power;
     }
 

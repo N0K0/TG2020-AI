@@ -4,27 +4,9 @@ using UnityEngine;
 
 public class CarCollider : MonoBehaviour
 {
-
     CarController carController = null;
 
-    private void OnCollisionEnter (Collision collision)
-    {
-        if(carController == null)
-        {
-            carController = gameObject.GetComponentInChildren<CarController>();
-        }
-        carController.OnRoad(true);
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-
-        if (carController == null)
-        {
-            carController = gameObject.GetComponentInChildren<CarController>();
-        }
-        carController.OnRoad(false);
-    }
+    public bool OnRoad;
 
     private void Update()
     {
@@ -33,10 +15,25 @@ public class CarCollider : MonoBehaviour
 
     private void CheckRoad()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(gameObject.transform.position, Vector3.down, out hit))
+        //public static bool Raycast(Vector3 origin, Vector3 direction, out RaycastHit hitInfo, float maxDistance, int layerMask);
+        int layers =~ LayerMask.GetMask("Players");
+
+        if (carController == null)
         {
-            Debug.Log(hit.collider.gameObject.name);
+            carController = gameObject.GetComponentInChildren<CarController>();
+        }
+
+        RaycastHit hit;
+        Debug.DrawRay(gameObject.transform.position + new Vector3(0,20,0), Vector3.down * 100f, Color.cyan, 1f);
+        bool RayHit = Physics.Raycast(gameObject.transform.position + new Vector3(0, 20, 0), Vector3.down, out hit, 100f, layers);
+        if (RayHit)
+        {
+            OnRoad = hit.collider.gameObject.tag.Equals("Road");
+            Debug.Log(hit.collider.gameObject.name + " " + OnRoad);
+            carController.OnRoad(OnRoad);
+        } else
+        {
+            Debug.Log("Ray did not hit anyting");
         }
     }
 }

@@ -181,7 +181,9 @@ public class ClientController : WebSocketBehavior
             case "fullMap":
                 fullmap(msg);
                 break;
-            case "allPlayers":
+
+            // Not implemeted and not needed given that there is no collision
+            case "allPlayers":  
                 allplayers(msg);
                 break;
             case "moveToPoint":

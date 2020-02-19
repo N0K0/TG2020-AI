@@ -301,6 +301,8 @@ public class Server : MonoBehaviour
         ps.thrustRemaining = player.thrustRemaining;
         ps.targetAngle = player.targetDir.y;
 
+        ps.checkpointsHit = player.checkpointsHit;
+
         Debug.DrawLine(ps.pos, ps.checkpoint_next_pos, player.debug_color);
 
         return JsonConvert.SerializeObject(ps);
@@ -409,7 +411,7 @@ class PlayerStatus
      * 
      */
 
-    public List<bool> checkpointsHit;
+    public bool[] checkpointsHit;
     public Vector3Json pos;
     public Vector3Json rotation;
     public Vector3Json checkpoint_next_pos;

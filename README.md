@@ -26,6 +26,8 @@ This approach was chosen due to the fact that almost all _reasonable_ languages 
 
 ###### Python
 
+
+
 ###### Javascript (TypeSript?)
 
 ###### Java/ Kotlin
@@ -48,6 +50,12 @@ The first one is the definition of the game map. As precisely as possible. Since
 #### The game map
 
 The game map is procedurally generated from 3 to 10 points on a map, with bezier curves drawn between them. The map is completely flat and you may only collide with the ground. Simply ignore the y keys that is passed to you as the player. 
+
+See the first video from here if you wonder how the curves work
+
+https://www.youtube.com/playlist?list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP
+
+
 
 ### Commands and messages
 
@@ -133,7 +141,7 @@ Which may be parsed as the following:
 
 All the messages here are encoded the Command field of the following 
 
-```
+```json
 {
     "Type" : "",
     "Command": ""
@@ -148,8 +156,8 @@ All the messages here are encoded the Command field of the following
 {
     "Type" : "moveToPoint",
     "Command": {
-        "x": float,
-        "y": float
+        "x": "float",
+        "y": "float"
     }
 }
 ```
@@ -158,44 +166,63 @@ All the messages here are encoded the Command field of the following
 
 This is the angle relative to the north of the world. Uses the angles from 0-360 degrees
 
-```
+```json
 {
     "Type" : "setAngle",
     "Command": {
-        "value": float
+        "value": "float"
     }
 }
 ```
 
 ##### Set angle relative
 
-This rotates the target direction with the new angle
+This rotates the target direction with the new angle in degrees.
 
-```
+```json
 {
     "Type" : "setAngleRelative",
     "Command": {
-        "value": float
+        "value": "float"
     }
 }
 ```
 
 ##### Set thrust
 
-```
+The value is number of seconds to activate the thrust
 
+```json
+{
+    "Type" : "thrust",
+    "Command": {
+        "value": "float"
+    }
+}
 ```
 
 ##### Set target power
 
+Set the power value for the thrust
+
+```json
+{
+    "Type" : "setPower",
+    "Command": {
+        "value": "float"
+    }
+}
 ```
 
-```
+##### Set target Turn Rate
 
-##### Set target TurnRate
-
-```
-
+```json
+{
+    "Type" : "setTurnRate",
+    "Command": {
+        "value": "float"
+    }
+}
 ```
 
 ##### Set username
