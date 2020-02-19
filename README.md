@@ -2,13 +2,51 @@
 
 Note that this is a beta of the final version, towards April the game will be **much** more polished! :)
 
+Expect changes to the readme up and throughout march.
+
 The point of this release is to show off the protocol so that everyone that wished may start working. We will **not** break any implementation that you are working on right now, but we may add more commands. Either for finer control of the vehicle or easier control for more novice players.
 
 
 
+We might tweak some values based on some more playtesting up until the 1st of March.
+
+We will also tweak the speed falloff when leaving the road 
+
 ## What are we going to do?
 
-## Intro to the challenges technical aspects
+The challenge is simple, you are going to drive a car around a track as fast as possible!
+
+### Examples
+
+More examples will come!
+
+**Python:** https://github.com/N0K0/AiCompo2020-bots
+
+
+
+## Prizes
+
+- 1st: 4000kr
+- 2nd: 3000kr
+- 3rd: 2000kr
+
+## Rules
+
+### General Rules apply
+
+### Competition Rules
+
+* Minimum five competitors is needed
+* Do not interact with the computer outside of the websocket server
+* The rules may change in 
+
+
+
+#### Score/Rank system
+
+The system has not been decided, will be published as soon as we figure out how we want to do it.
+
+Regardless, the point is to complete the track as fast as possible.
 
 
 
@@ -18,15 +56,9 @@ The protocol is based on JSON packets over WebSockets.
 
 This approach was chosen due to the fact that almost all _reasonable_ languages supports these two concepts either natively or via a mature 3rd party package.
 
-### Connecting to the server
-
-#### Using Web Sockets
-
-##### Libraries for different languages
+##### Languages which we will support
 
 ###### Python
-
-
 
 ###### Javascript (TypeSript?)
 
@@ -38,6 +70,12 @@ This approach was chosen due to the fact that almost all _reasonable_ languages 
 
 You can use whatever you want of languages, but these are the ones i'm ready to compile/run.
 Contact me if you want to use something else, and/or got reasonable library needs.
+
+
+
+### The server location
+
+The Unity application automatically sets up an Websocket Server on `ws://localhost:8888`
 
 
 
@@ -203,7 +241,7 @@ The value is number of seconds to activate the thrust
 
 ##### Set target power
 
-Set the power value for the thrust
+Set the power value for the thrust, must be between 1 and `turnLevelMaxRoad`
 
 ```json
 {
@@ -215,6 +253,8 @@ Set the power value for the thrust
 ```
 
 ##### Set target Turn Rate
+
+Set the power value for the turn rate, must be between 1 and `thrustLevelMaxRoad`
 
 ```json
 {
@@ -443,26 +483,13 @@ Note that this is a tiny segment of the real map status
 }
 ```
 
-### Game Mechanics
+##### Settings message
 
-The goal
+**TODO**
 
+See all values defined in the CarController
 
-
-### Examples
-
-## Prizes
-
-## Rules
-
-### General Rules
-### Competition Rules
-
-#### Score/Rank system
-
-The system has not been decided, will be published as soon as we figure out how we want to do it.
-
-Regardless, the point is to complete the track as fast as possible
+https://github.com/N0K0/TG2020/blob/master/Assets/Scripts/CarController.cs#L59-L71
 
 
 
