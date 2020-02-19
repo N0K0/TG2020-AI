@@ -89,7 +89,7 @@ public class Server : MonoBehaviour
         car_prefab = Resources.Load<GameObject>("CarController");
         DontDestroyOnLoad(gameObject);
         players = new List<CarController>();
-        wss = new GameSocketServer("ws://localhost:8888");
+        wss = new GameSocketServer("xamws://localhost:8888");
         // Client controller has a callback to this class in which we instanceiate the gameopbject (must be done in main)
 #pragma warning disable CS0618 // Type or member is obsolete
         wss.AddWebSocketService("/server", () => new ClientController(this) { } ) ;

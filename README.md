@@ -2,7 +2,7 @@
 
 Note that this is a beta of the final version, towards April the game will be **much** more polished! :)
 
-Expect changes to the readme up and throughout march.
+Expect changes to the readme up and throughout march. As well as some major feature updates. For example the missing UI parts.
 
 The point of this release is to show off the protocol so that everyone that wished may start working. We will **not** break any implementation that you are working on right now, but we may add more commands. Either for finer control of the vehicle or easier control for more novice players.
 
