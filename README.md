@@ -6,22 +6,12 @@ Expect changes to the readme up and throughout march. As well as some major feat
 
 The point of this release is to show off the protocol so that everyone that wished may start working. We will **not** break any implementation that you are working on right now, but we may add more commands. Either for finer control of the vehicle or easier control for more novice players.
 
-
-
-We might tweak some values based on some more playtesting up until the 1st of March.
-
-We will also tweak the speed falloff when leaving the road 
+We might tweak some values based on some more playtesting up until the 1st of March ish.
+We will also tweak the speed falloff when leaving the road, at the moment its a bit to steep
 
 ## What are we going to do?
 
 The challenge is simple, you are going to drive a car around a track as fast as possible!
-
-### Examples
-
-More examples will come!
-
-**Python:** https://github.com/N0K0/AiCompo2020-bots
-
 
 
 ## Prizes
@@ -38,17 +28,13 @@ More examples will come!
 
 * Minimum five competitors is needed
 * Do not interact with the computer outside of the websocket server
-* The rules may change in 
-
+* The rules may change within reasonable limits
 
 
 #### Score/Rank system
 
-The system has not been decided, will be published as soon as we figure out how we want to do it.
-
+The system has not been decided, will be published as soon as we figure out how we want to do it. 
 Regardless, the point is to complete the track as fast as possible.
-
-
 
 ## The protocol
 
@@ -60,24 +46,36 @@ This approach was chosen due to the fact that almost all _reasonable_ languages 
 
 ###### Python
 
+Atleast websocket_client
+https://pypi.org/project/websocket_client/
+
 ###### Javascript (TypeSript?)
 
 ###### Java/ Kotlin
 
 ###### C#
 
+Websocket-sharp and JSON.Net will be avaliable
+
+https://github.com/sta/websocket-sharp
+https://www.newtonsoft.com/json
+
 ###### Others
 
 You can use whatever you want of languages, but these are the ones i'm ready to compile/run.
 Contact me if you want to use something else, and/or got reasonable library needs.
 
+### Examples
 
+More examples will come!
+**Python:** https://github.com/N0K0/AiCompo2020-bots
 
-### The server location
+### Connecting to the server
 
-The Unity application automatically sets up an Websocket Server on `ws://localhost:8888`
+The Unity application automatically sets up an Websocket Server on `ws://localhost:8888/` with the service running on `ws://localhost:8888/server`
 
-
+You will soon be greeted with a bunch of spam asking for an username.
+Check out the examples if something is unclear.
 
 ### State sent to the player
 
@@ -93,12 +91,9 @@ See the first video from here if you wonder how the curves work
 
 https://www.youtube.com/playlist?list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP
 
-
-
 ### Commands and messages
 
 In general all commands will return a couple of different answers, all basic commands return an OK or ERROR. Other than that we will return things like a bit more comprehensive status or such.
-
 
 
 The two basic returns are `OK` and `ERROR`.
@@ -108,7 +103,7 @@ Both are based on the Type field which is the same as the command sent. And a st
 ```json
 {
 	"Type": "Username",
-    "Status": "OK",
+        "Status": "OK",
 	"Command": "Username set!"
 }
 ```
@@ -116,7 +111,7 @@ Both are based on the Type field which is the same as the command sent. And a st
 ```json
 {
 	"Type": "Username",
-    "Status": "ERROR",
+        "Status": "ERROR",
 	"Command": "Username already in use, set an other if "
 
 }
@@ -135,7 +130,7 @@ For example the player status update message looks like the following:
 
 	"Type": "playerStatus",
 	"Status": "OK",
-    "Command": "{\"checkpointsHit\":null,\"pos\":{\"x\":90.47172,\"y\":0.0825762153,\"z\":419.044525},\"rotation\":{\"x\":9.9392335E-17,\"y\":25.8771763,\"z\":6.893535E-09},\"checkpoint_next_pos\":{\"x\":312.761475,\"y\":-0.495,\"z\":311.209961},\"checkpoint_next_rot\":{\"x\":-4.53195753E-06,\"y\":49.55492,\"z\":1.6694604E-06},\"thrustpower\":100.0,\"turnrate\":60.0,\"targetAngle\":0.0,\"thrustRemaining\":0.953831851}"
+        "Command": "{\"checkpointsHit\":null,\"pos\":{\"x\":90.47172,\"y\":0.0825762153,\"z\":419.044525},\"rotation\":{\"x\":9.9392335E-17,\"y\":25.8771763,\"z\":6.893535E-09},\"checkpoint_next_pos\":{\"x\":312.761475,\"y\":-0.495,\"z\":311.209961},\"checkpoint_next_rot\":{\"x\":-4.53195753E-06,\"y\":49.55492,\"z\":1.6694604E-06},\"thrustpower\":100.0,\"turnrate\":60.0,\"targetAngle\":0.0,\"thrustRemaining\":0.953831851}"
 }
 ```
 
@@ -285,8 +280,6 @@ Generic returns
 ##### Set color trace:
 
 **Not implemented just yet will be used in the final build**,
-
-_At the time of writing I have not decided what to do if someone recalls this command ;)_
 
 ###### Structure
 
@@ -449,7 +442,20 @@ Note that this is a tiny segment of the real map status
 }
 ```
 
+###### Bezier curves.
+The points given in the map is explained as follows in the tool:
 
+    /// A bezier path is a path made by stitching together any number of (cubic) bezier curves.
+    /// A single cubic bezier curve is defined by 4 points: anchor1, control1, control2, anchor2
+    /// The curve moves between the 2 anchors, and the shape of the curve is affected by the positions of the 2 control points
+
+    /// When two curves are stitched together, they share an anchor point (end anchor of curve 1 = start anchor of curve 2).
+    /// So while one curve alone consists of 4 points, two curves are defined by 7 unique points.
+
+    /// Apart from storing the points, this class also provides methods for working with the path.
+    /// For example, adding, inserting, and deleting points.
+
+I will try to get an vizualization of the point data up asap.
 
 ##### Personal player status
 
@@ -490,8 +496,6 @@ Note that this is a tiny segment of the real map status
 See all values defined in the CarController
 
 https://github.com/N0K0/TG2020/blob/master/Assets/Scripts/CarController.cs#L59-L71
-
-
 
 
 ## Other
