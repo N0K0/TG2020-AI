@@ -103,7 +103,7 @@ public class Server : MonoBehaviour
 
     internal void GameDone()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("GameDone");
     }
 
     public void RegisterClient(ClientController client)

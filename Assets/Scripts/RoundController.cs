@@ -14,8 +14,8 @@ public class RoundController : MonoBehaviour
     public GameObject checkPointHolder = null;
     public Checkpoint[] checkpoints = null;
 
-    float countDownTime = 3;
-    float currCountdownValue = 3;
+    float countDownTime = 10;
+    float currCountdownValue = 10;
 
     // Start is called before the first frame update
     void Start()
