@@ -1,5 +1,9 @@
 # The Gathering 2020 AI competition: Gaia Edition (Preview edition)
 
+![image-20200222121104563](media/README/image-20200222121104563.png)
+
+
+
 Note that this is a beta of the final version, towards April the game will be **much** more polished! :)
 
 Expect changes to the readme up and throughout march. As well as some major feature updates. For example the missing UI parts.
@@ -448,10 +452,10 @@ The points given in the map is explained as follows in the tool:
     /// A bezier path is a path made by stitching together any number of (cubic) bezier curves.
     /// A single cubic bezier curve is defined by 4 points: anchor1, control1, control2, anchor2
     /// The curve moves between the 2 anchors, and the shape of the curve is affected by the positions of the 2 control points
-
+    
     /// When two curves are stitched together, they share an anchor point (end anchor of curve 1 = start anchor of curve 2).
     /// So while one curve alone consists of 4 points, two curves are defined by 7 unique points.
-
+    
     /// Apart from storing the points, this class also provides methods for working with the path.
     /// For example, adding, inserting, and deleting points.
 
