@@ -10,7 +10,7 @@ Expect changes to the readme up and throughout march. As well as some major feat
 
 The point of this release is to show off the protocol so that everyone that wished may start working. We will **not** break any implementation that you are working on right now, but we may add more commands. Either for finer control of the vehicle or easier control for more novice players.
 
-We might tweak some values based on some more playtesting up until the 1st of March ish.
+We might tweak some values based on some more playtesting up until the 5st of March ish (forgot febrary is a bit short).
 We will also tweak the speed falloff when leaving the road, at the moment its a bit to steep
 
 ## What are we going to do?
