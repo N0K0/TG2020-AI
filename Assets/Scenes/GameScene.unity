@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 544146567}
   - component: {fileID: 544146566}
   m_Layer: 5
-  m_Name: UI
+  m_Name: CountdownText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

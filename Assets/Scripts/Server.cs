@@ -292,6 +292,11 @@ public class Server : MonoBehaviour
         // Find next checkpoint for player
         int index = player.GetNextCheckpointindex();
 
+        if (index > roundController.checkpoints.Length -1)
+        {
+            index = 0;
+        }
+
         Checkpoint checkpoint = roundController.checkpoints[index];
 
         ps.checkpoint_next_pos = checkpoint.transform.position;

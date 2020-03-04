@@ -146,6 +146,10 @@ public class CarController : MonoBehaviour
                 clientController.SendPlayerStatus();
                 break;
 
+            case Server.GameState.Done:
+                Debug.Log("The Game is done");
+                break;
+
             default:
                 Debug.LogError("Tick update hit wrongful state");
                 break;
