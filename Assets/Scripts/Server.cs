@@ -313,7 +313,6 @@ public class Server : MonoBehaviour
         return JsonConvert.SerializeObject(ps);
     }
 
-
     public string GenerateCompleteStatus()
     {
         /* This funciton creates the general status of the map all the players need
@@ -520,6 +519,13 @@ class Message
         Type = "fullMap";
         Status = "OK";
         Command = serializedMapData;
+    }
+
+    public void Settings(string serializedSettingsData)
+    {
+        Type = "settings";
+        Status = "OK";
+        Command = serializedSettingsData;
     }
 
 

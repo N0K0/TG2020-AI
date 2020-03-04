@@ -9,6 +9,9 @@ using WebSocketSharp.Server;
 
 public class ClientController : WebSocketBehavior
 {
+
+    public SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
+
     public GameObject carController = null;
     internal Server server = null;
     internal CarController carComponent = null;
@@ -86,6 +89,24 @@ public class ClientController : WebSocketBehavior
                 throw new InvalidCommandException("No more map requests left");
             }
 
+        }
+        catch (InvalidCommandException e)
+        {
+            Message error = new Message();
+            error.Error(msg.Type, e.Message);
+            Send(JsonConvert.SerializeObject(error));
+        }
+    }
+
+    void get_settings(Message msg)
+    {
+        try
+        {
+            Message data = new Message();
+            string set_str = JsonConvert.SerializeObject(settings);
+            data.MapStatus(set_str);
+            string str = JsonConvert.SerializeObject(data);
+            Send(str);
         }
         catch (InvalidCommandException e)
         {
@@ -181,7 +202,9 @@ public class ClientController : WebSocketBehavior
             case "fullMap":
                 fullmap(msg);
                 break;
-
+            case "settings":
+                get_settings(msg);
+                break;
             // Not implemeted and not needed given that there is no collision
             case "allPlayers":  
                 allplayers(msg);

@@ -5,9 +5,10 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 
+    SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
 
-    public float RotationSpeed = 0.1f;
-    public float MovementSpeed = 10f;
+    public float RotationSpeed;
+    public float MovementSpeed;
     GameObject[] cars;
 
     Vector3 camPos = new Vector3(0, 100, 100);
@@ -16,7 +17,8 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        RotationSpeed = settings.RotationSpeed;
+        MovementSpeed = settings.MovementSpeed;
     }
 
     // Update is called once per frame

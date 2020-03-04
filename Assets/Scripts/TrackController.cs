@@ -8,15 +8,24 @@ using PathCreation;
 [RequireComponent(typeof(PathCreator))]
 public class TrackController : MonoBehaviour
 {
-    public GameObject trackArea;
 
+    SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
+
+    public GameObject trackArea;
     public BezierPath trackPath;
-    public int Points_min = 3;
-    public int Points_max = 10;
+    public int Points_min;
+    public int Points_max;
     public int numCheckpoints; // Checkpoints
     private Bounds bounds;
 
     public GameObject checkpointHolder = null;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Points_min = settings.mapPointsMin;
+        Points_max = settings.mapPointsMax;
+    }
 
     private void generatePath()
     {
@@ -135,11 +144,7 @@ public class TrackController : MonoBehaviour
         generateCheckpoints();
     }
 
-// Start is called before the first frame update
-    void Start()    
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
