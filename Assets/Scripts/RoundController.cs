@@ -17,6 +17,9 @@ public class RoundController : MonoBehaviour
     float countDownTime = 10;
     float currCountdownValue = 10;
 
+    float countDownTimeGameDone = 120;
+    float currCountdownValueGameDone = 120;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,7 +75,7 @@ public class RoundController : MonoBehaviour
     internal void notifyDone(CarController carController)
     {
         carController.DoneWithRace = true;
-
+        StartCoroutine("RoundDoneCountDown");
         bool done = true;
         foreach (CarController car in server.GetPlayers())
         {
@@ -88,6 +91,8 @@ public class RoundController : MonoBehaviour
             server.GameDone();
         }
     }
+
+
 
     void UpdateLeaderBoard()
     {
@@ -106,20 +111,38 @@ public class RoundController : MonoBehaviour
 
     public IEnumerator CountDownToStart()
     {
-        ui = GameObject.Find("UI");
+        ui = GameObject.Find("CountdownText");
         Text text = ui.transform.GetChild(0).transform.GetComponent<Text>();
 
-        currCountdownValue = countDownTime;
-        while (currCountdownValue > 0)
+        currCountdownValueGameDone = countDownTimeGameDone;
+        while (currCountdownValueGameDone > 0)
         {
-            text.text = "Countdown: " + currCountdownValue.ToString() + " sec";
+            text.text = "Countdown to round done: " + currCountdownValueGameDone.ToString() + " sec";
             //Debug.Log("Countdown: " + currCountdownValue);
             yield return new WaitForSeconds(1.0f);
-            currCountdownValue--;
+            currCountdownValueGameDone--;
         }
-        UnfreezePlayers();
-        ui.SetActive(false);
-        server.GameStatus = Server.GameState.Game_Running;
+        server.GameDone();
+    }
+
+    internal IEnumerator RoundDoneCountDown()
+    {
+        {
+            ui = GameObject.Find("CountdownText");
+            Text text = ui.transform.GetChild(0).transform.GetComponent<Text>();
+
+            currCountdownValue = countDownTime;
+            while (currCountdownValue > 0)
+            {
+                text.text = "Countdown: " + currCountdownValue.ToString() + " sec";
+                //Debug.Log("Countdown: " + currCountdownValue);
+                yield return new WaitForSeconds(1.0f);
+                currCountdownValue--;
+            }
+            UnfreezePlayers();
+            ui.SetActive(false);
+            server.GameStatus = Server.GameState.Game_Running;
+        }
     }
 
     internal void InitRound()
@@ -146,9 +169,6 @@ public class RoundController : MonoBehaviour
             car.checkpointsHit = new bool[checkpoints.Length];
             car.transform.parent.transform.position = startPos;
             car.transform.parent.rotation = startRotation;
-
-            Rigidbody body = car.GetComponent<Rigidbody>();
-            body.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
 
             car.SendMapStatus();
         }

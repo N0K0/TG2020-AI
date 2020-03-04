@@ -821,6 +821,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1682631096919696390, guid: 359e71927affddd4598a7413255cb233,
+        type: 3}
+      propertyPath: m_Text
+      value: Rules / Settings (Accessible online)
+      objectReference: {fileID: 0}
     - target: {fileID: 1703591256584079206, guid: 359e71927affddd4598a7413255cb233,
         type: 3}
       propertyPath: m_AnchorMin.x
