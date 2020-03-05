@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 public class CarController : MonoBehaviour
 {
 
+    public SettingsHolder sh = null;
     public ClientController clientController = null;
     public Server server = null;
     public string UserName = "Anon";
@@ -56,19 +57,21 @@ public class CarController : MonoBehaviour
     void Start()
     {
 
+        sh = GameObject.Find("SettingsHolder").GetComponent<SettingsHolder>();
+
         targetDir = Vector3.forward;
         targetPoint = Vector3.zero;
 
-        thrustLevel = 100f;
-        turnLevel = 60f;
+        thrustLevel = sh.settings.thrustLevelMaxRoad;
+        turnLevel = sh.settings.turnLevelMax;
 
-        thrustLevelMax = 30f; // Used to regulate the turnrate and how big of an impulse that is outputted
-        turnLevelMax = 30f;
-        velLevelMax = 30f;
+        thrustLevelMax = sh.settings.thrustLevelMax; // Used to regulate the turnrate and how big of an impulse that is outputted
+        turnLevelMax = sh.settings.turnLevelMax;
+        velLevelMax = sh.settings.velLevelMax;
 
-        thrustLevelMaxRoad = 100f;
-        turnLevelMaxRoad = 60f;
-        velLevelMaxRoad = 90f;
+        thrustLevelMaxRoad = sh.settings.thrustLevelMaxRoad;
+        turnLevelMaxRoad = sh.settings.turnLevelMaxRoad;
+        velLevelMaxRoad = sh.settings.velLevelMaxRoad;
     }
 
     void Update()

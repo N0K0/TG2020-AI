@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 
 public class RoundController : MonoBehaviour
 {
+    public SettingsHolder sh;
     public Server server = null;
     GameObject playerHolder = null;
     List<GameObject> cars = null;
@@ -23,6 +25,7 @@ public class RoundController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        sh = GameObject.Find("SettingsHolder").GetComponent<SettingsHolder>();
         DontDestroyOnLoad(this);
         cars = new List<GameObject>();
     }
@@ -160,7 +163,9 @@ public class RoundController : MonoBehaviour
         Quaternion startRotation = tc.getStartRotation() * Quaternion.Euler(90, 0, 90);
 
         string mapStatusStr = server.GenerateCompleteStatus();
+        string set_str = GenerateSettingsStatus();
         server.mapStatusStr = mapStatusStr;
+        server.settingsStr = set_str;
         // Send players the mapdata
         foreach ( CarController car in server.GetPlayers())
         {
@@ -181,5 +186,10 @@ public class RoundController : MonoBehaviour
         }
 
         StartCoroutine("CountDownToStart");
+    }
+
+    private string GenerateSettingsStatus()
+    {
+        return JsonConvert.SerializeObject(sh.settings);
     }
 }

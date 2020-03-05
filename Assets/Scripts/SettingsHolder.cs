@@ -5,6 +5,18 @@ using UnityEngine;
 public class SettingsHolder : MonoBehaviour
 {
 
+    public Settings settings;
+
+    void Start()
+    {
+        settings = new Settings();
+        DontDestroyOnLoad(this.gameObject);
+    }
+}
+
+
+public class Settings
+{
     /* Road things */
     public float thrustLevelMax = 30f; // Used to regulate the turnrate and how big of an impulse that is outputted
     public float turnLevelMax = 30f;
@@ -22,10 +34,4 @@ public class SettingsHolder : MonoBehaviour
     /* Camera things */
     public float RotationSpeed = 0.1f;
     public float MovementSpeed = 10f;
-
-
-    void Start()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
 }

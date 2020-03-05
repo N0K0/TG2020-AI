@@ -9,7 +9,7 @@ using PathCreation;
 public class TrackController : MonoBehaviour
 {
 
-    SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
+    SettingsHolder sh;
 
     public GameObject trackArea;
     public BezierPath trackPath;
@@ -23,8 +23,9 @@ public class TrackController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Points_min = settings.mapPointsMin;
-        Points_max = settings.mapPointsMax;
+        sh = GameObject.Find("SettingsHolder").GetComponent<SettingsHolder>();
+        Points_min = sh.settings.mapPointsMin;
+        Points_max = sh.settings.mapPointsMax;
     }
 
     private void generatePath()

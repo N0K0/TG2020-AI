@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 
-    SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
+    SettingsHolder sh;
 
     public float RotationSpeed;
     public float MovementSpeed;
@@ -17,8 +17,9 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RotationSpeed = settings.RotationSpeed;
-        MovementSpeed = settings.MovementSpeed;
+        sh = GameObject.Find("SettingsHolder").GetComponent<SettingsHolder>();
+        RotationSpeed = sh.settings.RotationSpeed;
+        MovementSpeed = sh.settings.MovementSpeed;
     }
 
     // Update is called once per frame

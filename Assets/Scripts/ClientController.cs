@@ -10,8 +10,6 @@ using WebSocketSharp.Server;
 public class ClientController : WebSocketBehavior
 {
 
-    public SettingsHolder settings = GameObject.Find("Settings Holder").GetComponent<SettingsHolder>();
-
     public GameObject carController = null;
     internal Server server = null;
     internal CarController carComponent = null;
@@ -103,7 +101,7 @@ public class ClientController : WebSocketBehavior
         try
         {
             Message data = new Message();
-            string set_str = JsonConvert.SerializeObject(settings);
+            string set_str = JsonConvert.SerializeObject(carComponent.sh.settings);
             data.MapStatus(set_str);
             string str = JsonConvert.SerializeObject(data);
             Send(str);

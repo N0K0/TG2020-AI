@@ -66,6 +66,7 @@ public class Server : MonoBehaviour
     private float TickRate = 1f / 120f; // 120 ticks per sec is the goal
 
     public string mapStatusStr;
+    public string settingsStr;
     internal GameState GameStatus;
 
     void Start()
@@ -97,8 +98,6 @@ public class Server : MonoBehaviour
         InvokeRepeating("TickUpdate", 0f, TickRate);
         wss.Start();
         Debug.Log("WSS Running");
-
-
     }
 
     internal void GameDone()
