@@ -34,4 +34,7 @@ public class Settings
     /* Camera things */
     public float RotationSpeed = 0.1f;
     public float MovementSpeed = 10f;
+
+    public float FrictionRoad = 0.8f;
+    public float FrictionGround = 0.4f;
 }
