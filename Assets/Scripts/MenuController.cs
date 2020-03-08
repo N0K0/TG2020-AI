@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     public Server server = null;
+    public SettingsHolder settings;
 
     enum Windows : int  { Menu, Credits, Rules , Lobby, Settings}
     //Canvas
@@ -21,6 +22,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Button menu_exit = null;
     [SerializeField] private Button menu_rules = null;
     [SerializeField] private Button menu_start = null;
+    [SerializeField] private Button menu_settings = null;
 
     // Credits buttons
     [SerializeField] private Button credits_back = null;
@@ -43,8 +45,12 @@ public class MenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Settings assignment
+        settings = GameObject.Find("SettingsHolder").GetComponent<SettingsHolder>();
+
         // Menu buttons
         menu_start.onClick.AddListener(() => SwapTo(Windows.Lobby));
+        menu_settings.onClick.AddListener(() => SwapTo(Windows.Settings));
         menu_credits.onClick.AddListener(() => SwapTo(Windows.Credits));
         menu_rules.onClick.AddListener(() => SwapTo(Windows.Rules));
         menu_exit.onClick.AddListener(ExitGame);
@@ -60,7 +66,7 @@ public class MenuController : MonoBehaviour
         lobby_start.onClick.AddListener(server.StartServer);
 
         // Settings buttons
-        settings_back.onClick.AddListener(() => SwapTo(Windows.Settings));
+        settings_back.onClick.AddListener(() => SwapTo(Windows.Menu));
 
         lobby_area_players = canvas_lobby.transform.GetChild(0).gameObject; // What on earth is this hack?
         playerListUI_component = Resources.Load<GameObject>("UI/PlayerListItem"); // Used for the lobby menu
@@ -122,6 +128,7 @@ public class MenuController : MonoBehaviour
                 canvas_lobby.SetActive(true);
                 break;
             case Windows.Settings:
+                settings.refresh();
                 canvas_settings.SetActive(true);
                 break;
             default:
