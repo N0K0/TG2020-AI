@@ -97,8 +97,8 @@ https://www.youtube.com/playlist?list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP
 
 ### Commands and messages
 
-In general all commands will return a couple of different answers, all basic commands return an OK or ERROR. Other than that we will return things like a bit more comprehensive status or such.
 
+In general all commands will return a couple of different answers, all basic commands return an OK or ERROR. Other than that we will return things like a bit more comprehensive status or such.
 
 The two basic returns are `OK` and `ERROR`.
 
@@ -185,7 +185,8 @@ All the messages here are encoded the Command field of the following
 }
 ```
 
-
+For those intrested its parsed in the case:
+https://github.com/N0K0/TG2020-AI/blob/master/Assets/Scripts/ClientController.cs#L191-L238
 
 ##### Move towards point:
 
