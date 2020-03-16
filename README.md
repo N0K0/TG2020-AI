@@ -218,7 +218,7 @@ This rotates the target direction with the new angle in degrees.
 
 ```json
 {
-    "Type" : "setAngleRelative",
+    "Type" : "turnAngleRelative",
     "Command": {
         "value": "float"
     }
