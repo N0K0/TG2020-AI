@@ -1,4 +1,6 @@
-# The Gathering 2020 AI competition: Gaia Edition (Preview edition)
+# [Cancelled] The Gathering 2020 AI competition: Gaia Edition 
+
+Note that The Gathering 2020 is cancelled and replaced with TG2020:Online i which i do not have capacity to host the competition
 
 ![image-20200222121104563](media/README/image-20200222121104563.png)
 
